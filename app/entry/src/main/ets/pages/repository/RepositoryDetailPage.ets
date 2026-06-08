@@ -14,17 +14,20 @@ export struct RepositoryDetailPage {
   @State isFilesLoading: boolean = false;
   @State isFileContentLoading: boolean = false;
   @State isIssuesLoading: boolean = false;
+  @State isIssueDetailLoading: boolean = false;
   @State errorMessage: string = '';
   @State readmeMessage: string = '';
   @State filesMessage: string = '';
   @State fileContentMessage: string = '';
   @State issuesMessage: string = '';
+  @State issueDetailMessage: string = '';
   @State readmeContent: string = '';
   @State currentPath: string = '';
   @State selectedFilePath: string = '';
   @State fileContent: string = '';
   @State files: RepositoryFileModel[] = [];
   @State issues: IssueModel[] = [];
+  @State selectedIssue: IssueModel | null = null;
   @State repository: RepositoryModel | null = RepositoryStore.getSelectedRepository();
 
   async aboutToAppear(): Promise<void> {
@@ -84,6 +87,25 @@ export struct RepositoryDetailPage {
     } else {
       this.issuesMessage = '';
     }
+  }
+
+  async loadIssueDetail(issue: IssueModel): Promise<void> {
+    if (this.repository === null) {
+      return;
+    }
+
+    this.selectedIssue = issue;
+    this.issueDetailMessage = '';
+    this.isIssueDetailLoading = true;
+    const detail = await AtomGitIssueService.getIssueDetail(this.repository, issue.number);
+    this.isIssueDetailLoading = false;
+
+    if (detail === null) {
+      this.issueDetailMessage = 'Issue detail load failed';
+      return;
+    }
+
+    this.selectedIssue = detail;
   }
 
   async loadFiles(targetPath: string): Promise<void> {
@@ -341,7 +363,7 @@ export struct RepositoryDetailPage {
             Text('#' + item.number.toString() + ' ' + item.title)
               .fontSize(15)
               .fontWeight(FontWeight.Bold)
-            Text(item.state + (item.author.length > 0 ? ' · ' + item.author : ''))
+            Text(item.state + (item.author.length > 0 ? ' · ' + item.author : '') + ' · Tap to view detail')
               .fontSize(12)
               .margin({ top: 6 })
           }
@@ -350,9 +372,53 @@ export struct RepositoryDetailPage {
           .margin({ top: 8 })
           .backgroundColor(Color.White)
           .borderRadius(12)
+          .onClick(async () => {
+            await this.loadIssueDetail(item);
+          })
         }, (item: IssueModel) => item.number.toString())
 
-        Text('Issue 详情将在后续版本接入。')
+        if (this.selectedIssue !== null) {
+          Text('Issue Detail')
+            .fontSize(22)
+            .fontWeight(FontWeight.Bold)
+            .margin({ top: 28 })
+
+          if (this.isIssueDetailLoading) {
+            Text('Loading issue detail...')
+              .fontSize(15)
+              .margin({ top: 12 })
+          }
+
+          if (this.issueDetailMessage.length > 0) {
+            Text(this.issueDetailMessage)
+              .fontSize(14)
+              .fontColor('#6B7280')
+              .margin({ top: 12 })
+          }
+
+          Text('#' + this.selectedIssue.number.toString() + ' ' + this.selectedIssue.title)
+            .fontSize(18)
+            .fontWeight(FontWeight.Bold)
+            .margin({ top: 12 })
+
+          Text(this.selectedIssue.state + ' · comments ' + this.selectedIssue.comments.toString())
+            .fontSize(13)
+            .margin({ top: 8 })
+
+          Text(this.selectedIssue.updatedAt.length > 0 ? 'Updated: ' + this.selectedIssue.updatedAt : '')
+            .fontSize(12)
+            .margin({ top: 6 })
+
+          Text(this.selectedIssue.body.length > 0 ? this.selectedIssue.body : 'No issue body')
+            .fontSize(13)
+            .lineHeight(20)
+            .padding(12)
+            .margin({ top: 12 })
+            .backgroundColor(Color.White)
+            .borderRadius(12)
+        }
+
+        Text('Issue comments 将在后续版本接入。')
           .fontSize(14)
           .margin({ top: 24, bottom: 24 })
       }
