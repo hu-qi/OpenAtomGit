@@ -7,6 +7,9 @@
 - Added requirements docs.
 - Added ADR docs.
 - Added testing and regression docs.
+- Added service placeholders for AtomGitConfig and AtomGitHttpClient.
+- Added auth, store, dao and model placeholders.
+- Documented harness usage in README.
 
 ## Rule
 
