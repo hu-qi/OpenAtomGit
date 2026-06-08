@@ -42,6 +42,22 @@ export struct RepositoryDetailPage {
     this.loadRepositoryDetail();
   }
 
+  handleOpenDirectory(path: string): void {
+    this.loadFiles(path);
+  }
+
+  handleOpenFile(path: string): void {
+    this.loadFileContent(path);
+  }
+
+  handleGoParentPath(): void {
+    this.goParentPath();
+  }
+
+  handleOpenIssue(issue: IssueModel): void {
+    this.loadIssueDetail(issue);
+  }
+
   async loadRepositoryDetail(): Promise<void> {
     if (this.repository === null) {
       this.errorMessage = 'No repository selected';
@@ -221,13 +237,13 @@ export struct RepositoryDetailPage {
           fileContentMessage: this.fileContentMessage,
           fileContent: this.fileContent,
           onOpenDirectory: (path: string) => {
-            this.loadFiles(path);
+            this.handleOpenDirectory(path);
           },
           onOpenFile: (path: string) => {
-            this.loadFileContent(path);
+            this.handleOpenFile(path);
           },
           onUp: () => {
-            this.goParentPath();
+            this.handleGoParentPath();
           }
         })
 
@@ -248,7 +264,7 @@ export struct RepositoryDetailPage {
           issueDetailMessage: this.issueDetailMessage,
           issueCommentsMessage: this.issueCommentsMessage,
           onOpenIssue: (issue: IssueModel) => {
-            this.loadIssueDetail(issue);
+            this.handleOpenIssue(issue);
           }
         })
 
