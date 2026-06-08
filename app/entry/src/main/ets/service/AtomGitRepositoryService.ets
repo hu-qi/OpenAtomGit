@@ -8,23 +8,16 @@ import { RepositoryMapper } from '../mapper/RepositoryMapper';
 import { RepositoryFileModel } from '../model/RepositoryFileModel';
 import { RepositoryModel } from '../model/RepositoryModel';
 import { AtomGitHttpClient } from './AtomGitHttpClient';
+import { RepositoryPathHelper } from './RepositoryPathHelper';
 
 export class AtomGitRepositoryService {
-  static encodeRepositoryPath(targetPath: string): string {
-    if (targetPath.length === 0) {
-      return '';
-    }
-
-    return targetPath.split('/').map((item: string) => encodeURIComponent(item)).join('/');
-  }
-
   static async getRepositoryDetail(repository: RepositoryModel): Promise<RepositoryModel | null> {
     const token = TokenManager.getToken();
     if (token.length === 0 || repository.owner.length === 0 || repository.name.length === 0) {
       return null;
     }
 
-    const path = '/repos/' + encodeURIComponent(repository.owner) + '/' + encodeURIComponent(repository.name);
+    const path = RepositoryPathHelper.repositoryPath(repository.owner, repository.name);
     const body = await AtomGitHttpClient.get(path, token);
     if (body.length === 0) {
       return null;
@@ -44,7 +37,7 @@ export class AtomGitRepositoryService {
       return '';
     }
 
-    const path = '/repos/' + encodeURIComponent(repository.owner) + '/' + encodeURIComponent(repository.name) + '/readme';
+    const path = RepositoryPathHelper.readmePath(repository.owner, repository.name);
     const body = await AtomGitHttpClient.get(path, token);
     if (body.length === 0) {
       return '';
@@ -68,8 +61,7 @@ export class AtomGitRepositoryService {
       return [];
     }
 
-    const encodedPath = AtomGitRepositoryService.encodeRepositoryPath(targetPath);
-    const path = '/repos/' + encodeURIComponent(repository.owner) + '/' + encodeURIComponent(repository.name) + '/contents' + (encodedPath.length > 0 ? '/' + encodedPath : '');
+    const path = RepositoryPathHelper.contentsPath(repository.owner, repository.name, targetPath);
     const body = await AtomGitHttpClient.get(path, token);
     if (body.length === 0) {
       return [];
@@ -89,8 +81,7 @@ export class AtomGitRepositoryService {
       return '';
     }
 
-    const encodedPath = AtomGitRepositoryService.encodeRepositoryPath(filePath);
-    const path = '/repos/' + encodeURIComponent(repository.owner) + '/' + encodeURIComponent(repository.name) + '/contents/' + encodedPath;
+    const path = RepositoryPathHelper.contentsPath(repository.owner, repository.name, filePath);
     const body = await AtomGitHttpClient.get(path, token);
     if (body.length === 0) {
       return '';
