@@ -18,6 +18,10 @@
 - Tap one directory row if present.
 - Current path updates to selected directory path.
 - Child files load or No files found appears.
+- Tap one FILE row if present.
+- File Preview section appears.
+- Loading file content text appears briefly.
+- File content preview appears or File content not available appears.
 - Tap Up.
 - Current path returns to parent path.
 - README section appears.
