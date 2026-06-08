@@ -30,6 +30,10 @@
 - Added AtomGitSearchService for repository search.
 - Wired SearchStore and SearchPage to repository search MVP.
 - Updated search manual test for repository search.
+- Added selected repository state in RepositoryStore.
+- Added search result click navigation to repository detail.
+- Updated RepositoryDetailPage to render selected repository.
+- Updated search manual test for detail navigation.
 
 ## Rule
 
