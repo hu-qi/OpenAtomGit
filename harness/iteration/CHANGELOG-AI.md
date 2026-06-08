@@ -72,6 +72,7 @@
 - Refactored RepositoryDetailPage to use the README section.
 - Added RepositoryIssuesSection component.
 - Refactored RepositoryDetailPage to use the issues section.
+- Moved repository detail loading from lifecycle method into loadRepositoryDetail.
 
 ## Rule
 
