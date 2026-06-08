@@ -34,6 +34,10 @@
 - Added search result click navigation to repository detail.
 - Updated RepositoryDetailPage to render selected repository.
 - Updated search manual test for detail navigation.
+- Extended repository DTO, model and mapper with detail fields.
+- Added AtomGitRepositoryService for repository detail API.
+- Updated RepositoryDetailPage to load repository detail and render metrics.
+- Updated repo manual test for detail API.
 
 ## Rule
 
