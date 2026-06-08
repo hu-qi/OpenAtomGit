@@ -6,6 +6,7 @@ import { RepositoryModel } from '../../model/RepositoryModel';
 import { AtomGitIssueService } from '../../service/AtomGitIssueService';
 import { AtomGitRepositoryService } from '../../service/AtomGitRepositoryService';
 import { RepositoryStore } from '../../store/RepositoryStore';
+import { RepositorySummarySection } from './RepositorySummarySection';
 
 @Component
 export struct RepositoryDetailPage {
@@ -192,45 +193,16 @@ export struct RepositoryDetailPage {
             this.onNavigate(AppRoute.SEARCH)
           })
 
-        Text('Repository Detail')
-          .fontSize(28)
-          .fontWeight(FontWeight.Bold)
-          .margin({ top: 24 })
-
-        if (this.isLoading) {
-          Text('Loading repository detail...')
-            .fontSize(15)
-            .margin({ top: 16 })
-        }
-
-        if (this.errorMessage.length > 0) {
-          Text(this.errorMessage)
-            .fontSize(14)
-            .fontColor('#E5484D')
-            .margin({ top: 12 })
-        }
-
-        Text(this.repository === null ? 'No repository selected' : this.repository.getFullName())
-          .fontSize(20)
-          .fontWeight(FontWeight.Bold)
-          .margin({ top: 16 })
-
-        Text(this.repository === null ? '' : (this.repository.description.length > 0 ? this.repository.description : 'No description'))
-          .fontSize(15)
-          .lineHeight(24)
-          .margin({ top: 12 })
-
-        Row() {
-          this.MetricItem('Stars', this.repository === null ? 0 : this.repository.stars)
-          this.MetricItem('Forks', this.repository === null ? 0 : this.repository.forks)
-          this.MetricItem('Watchers', this.repository === null ? 0 : this.repository.watchers)
-        }
-        .width('100%')
-        .margin({ top: 20 })
-
-        Text(this.repository === null || this.repository.defaultBranch.length === 0 ? 'Default branch: -' : 'Default branch: ' + this.repository.defaultBranch)
-          .fontSize(14)
-          .margin({ top: 16 })
+        RepositorySummarySection({
+          fullName: this.repository === null ? '' : this.repository.getFullName(),
+          description: this.repository === null ? '' : this.repository.description,
+          stars: this.repository === null ? 0 : this.repository.stars,
+          forks: this.repository === null ? 0 : this.repository.forks,
+          watchers: this.repository === null ? 0 : this.repository.watchers,
+          defaultBranch: this.repository === null ? '' : this.repository.defaultBranch,
+          isLoading: this.isLoading,
+          errorMessage: this.errorMessage
+        })
 
         Text('Files')
           .fontSize(22)
@@ -489,21 +461,5 @@ export struct RepositoryDetailPage {
     }
     .width('100%')
     .height('100%')
-  }
-
-  @Builder
-  MetricItem(label: string, value: number) {
-    Column() {
-      Text(value.toString())
-        .fontSize(18)
-        .fontWeight(FontWeight.Bold)
-      Text(label)
-        .fontSize(12)
-        .margin({ top: 4 })
-    }
-    .layoutWeight(1)
-    .padding(12)
-    .backgroundColor(Color.White)
-    .borderRadius(12)
   }
 }
