@@ -4,7 +4,16 @@ import { IssueModel } from '../model/IssueModel';
 export class IssueMapper {
   static fromDto(dto: IssueDto): IssueModel {
     const author = dto.user?.login || dto.user?.name || '';
-    return new IssueModel(dto.number || 0, dto.title || '', dto.state || '', author, dto.created_at || '', dto.updated_at || '');
+    return new IssueModel(
+      dto.number || 0,
+      dto.title || '',
+      dto.state || '',
+      author,
+      dto.created_at || '',
+      dto.updated_at || '',
+      dto.body || '',
+      dto.comments || 0
+    );
   }
 
   static fromDtoList(list: IssueDto[]): IssueModel[] {
