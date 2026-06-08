@@ -7,6 +7,7 @@ export struct LoginPage {
   private loginStore: LoginStore = new LoginStore();
   @State tokenValue: string = '';
   @State errorMessage: string = '';
+  @State isLoading: boolean = false;
 
   build() {
     Column() {
@@ -29,11 +30,11 @@ export struct LoginPage {
       .padding({ left: 20, right: 20 })
 
       Column() {
-        Text('第一阶段先使用 Token 登录')
+        Text('使用 AtomGit Token 登录')
           .fontSize(22)
           .fontWeight(FontWeight.Bold)
 
-        Text('当前版本先完成本地状态流转，下一步接入真实用户接口验证。')
+        Text('点击登录后会请求 AtomGit 用户接口验证 Token。')
           .fontSize(15)
           .lineHeight(24)
           .margin({ top: 12 })
@@ -57,13 +58,16 @@ export struct LoginPage {
             .margin({ top: 8 })
         }
 
-        Button('登录并进入首页')
+        Button(this.isLoading ? '验证中...' : '登录并进入首页')
           .width('100%')
           .height(48)
           .fontSize(16)
           .margin({ top: 20 })
-          .onClick(() => {
-            const success = this.loginStore.loginWithToken();
+          .enabled(!this.isLoading)
+          .onClick(async () => {
+            this.isLoading = true;
+            const success = await this.loginStore.loginWithToken();
+            this.isLoading = false;
             if (success) {
               this.onNavigate(AppRoute.HOME)
             } else {
