@@ -73,6 +73,7 @@
 - Added RepositoryIssuesSection component.
 - Refactored RepositoryDetailPage to use the issues section.
 - Moved repository detail loading from lifecycle method into loadRepositoryDetail.
+- Added synchronous handlers for repository detail callbacks.
 
 ## Rule
 
