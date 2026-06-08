@@ -68,6 +68,8 @@
 - Refactored RepositoryDetailPage to use the summary section.
 - Added RepositoryFilesSection component.
 - Refactored RepositoryDetailPage to use the files section.
+- Added RepositoryReadmeSection component.
+- Refactored RepositoryDetailPage to use the README section.
 
 ## Rule
 
