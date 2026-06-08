@@ -1,3 +1,4 @@
+import common from '@ohos.app.ability.common';
 import { AppRoute } from '../../navigation/AppRoute';
 import { LoginStore } from '../../store/LoginStore';
 
@@ -34,7 +35,7 @@ export struct LoginPage {
           .fontSize(22)
           .fontWeight(FontWeight.Bold)
 
-        Text('点击登录后会请求 AtomGit 用户接口验证 Token。')
+        Text('点击登录后会请求 AtomGit 用户接口验证 Token，并保存登录态。')
           .fontSize(15)
           .lineHeight(24)
           .margin({ top: 12 })
@@ -66,7 +67,8 @@ export struct LoginPage {
           .enabled(!this.isLoading)
           .onClick(async () => {
             this.isLoading = true;
-            const success = await this.loginStore.loginWithToken();
+            const context = getContext(this) as common.UIAbilityContext;
+            const success = await this.loginStore.loginWithToken(context);
             this.isLoading = false;
             if (success) {
               this.onNavigate(AppRoute.HOME)
