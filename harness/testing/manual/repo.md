@@ -31,6 +31,9 @@
 - Loading issues text appears briefly.
 - Open issue list appears or No open issues found appears.
 - Issue rows show number, title, state and author when available.
+- Tap one issue row if present.
+- Issue Detail section appears.
+- Issue title, state, comment count and body appear.
 - Page can scroll to bottom.
 - Tap Back.
 - Search page appears again.
