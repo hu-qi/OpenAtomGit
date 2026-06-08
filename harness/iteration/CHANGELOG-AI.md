@@ -64,6 +64,8 @@
 - Added issue comments service method.
 - Updated RepositoryDetailPage with issue comments state and UI.
 - Updated repo and issue manual tests for issue comments.
+- Added RepositorySummarySection component.
+- Refactored RepositoryDetailPage to use the summary section.
 
 ## Rule
 
