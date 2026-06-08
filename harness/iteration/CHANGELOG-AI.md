@@ -56,6 +56,10 @@
 - Added AtomGitIssueService for open issue list.
 - Updated RepositoryDetailPage with Issues section.
 - Updated repo and issue manual tests for issue list entry.
+- Extended issue DTO, model and mapper for detail fields.
+- Added issue detail service method.
+- Updated RepositoryDetailPage with issue detail state and UI.
+- Updated repo and issue manual tests for issue detail.
 
 ## Rule
 
