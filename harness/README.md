@@ -22,23 +22,26 @@ harness/
 ├── decisions/
 │   ├── 0001-record-architecture-decisions.md
 │   ├── 0002-gsy-style-architecture.md
-│   └── 0003-atomgit-api-adapter.md
+│   └── 0003-api-layer.md
 ├── iteration/
 │   ├── CHANGELOG-AI.md
+│   ├── log.md
 │   └── release-cadence.md
 ├── testing/
-│   ├── strategy.md
+│   ├── README.md
 │   └── manual/
 │       ├── auth.md
-│       ├── repository.md
+│       ├── repo.md
 │       ├── search.md
-│       └── issue.md
+│       ├── issue.md
+│       └── items.md
 ├── regression/
 │   ├── checklist.md
 │   └── known-issues.md
 └── playbooks/
     ├── add-feature.md
     ├── ai-auto-debug.md
+    ├── refactor.md
     └── refactor-page.md
 ```
 
