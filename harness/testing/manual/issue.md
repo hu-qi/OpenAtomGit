@@ -12,7 +12,11 @@
 - Issue Detail section appears.
 - Loading issue detail text appears briefly.
 - Issue title, state, comment count and body appear.
+- Comments section appears.
+- Loading issue comments text appears briefly.
+- Issue comments appear or No comments found appears.
+- Comment rows show author, updated time and body when available.
 
 Future checks:
 
-- Show issue comments.
+- Reply to issue comment.
