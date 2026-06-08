@@ -1,6 +1,7 @@
 import { TokenManager } from '../auth/TokenManager';
 import { RepositoryDto } from '../dto/RepositoryDto';
 import { RepositoryFileDto } from '../dto/RepositoryFileDto';
+import { RepositoryReadmeDto } from '../dto/RepositoryReadmeDto';
 import { RepositoryFileMapper } from '../mapper/RepositoryFileMapper';
 import { RepositoryMapper } from '../mapper/RepositoryMapper';
 import { RepositoryFileModel } from '../model/RepositoryFileModel';
@@ -41,7 +42,7 @@ export class AtomGitRepositoryService {
     }
 
     try {
-      const parsed = JSON.parse(body) as Record<string, string>;
+      const parsed = JSON.parse(body) as RepositoryReadmeDto;
       return parsed.content || parsed.html || parsed.text || body;
     } catch (error) {
       return body;
