@@ -79,6 +79,7 @@
 - Added RepositoryReadmeDto and used it for README parsing.
 - Preserved slash separators when encoding repository file paths.
 - Added RepositoryFileContentDto and used it for file content parsing.
+- Extracted repository API path building into RepositoryPathHelper.
 
 ## Rule
 
