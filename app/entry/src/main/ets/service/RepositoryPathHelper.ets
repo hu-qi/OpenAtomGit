@@ -19,4 +19,16 @@ export class RepositoryPathHelper {
   static readmePath(owner: string, name: string): string {
     return RepositoryPathHelper.repositoryPath(owner, name) + '/readme';
   }
+
+  static issuesPath(owner: string, name: string): string {
+    return RepositoryPathHelper.repositoryPath(owner, name) + '/issues';
+  }
+
+  static issueDetailPath(owner: string, name: string, issueNumber: number): string {
+    return RepositoryPathHelper.issuesPath(owner, name) + '/' + issueNumber.toString();
+  }
+
+  static issueCommentsPath(owner: string, name: string, issueNumber: number): string {
+    return RepositoryPathHelper.issueDetailPath(owner, name, issueNumber) + '/comments';
+  }
 }
