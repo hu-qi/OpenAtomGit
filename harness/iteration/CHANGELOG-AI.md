@@ -80,6 +80,7 @@
 - Preserved slash separators when encoding repository file paths.
 - Added RepositoryFileContentDto and used it for file content parsing.
 - Extracted repository API path building into RepositoryPathHelper.
+- Added issue API path helpers and used them in AtomGitIssueService.
 
 ## Rule
 
