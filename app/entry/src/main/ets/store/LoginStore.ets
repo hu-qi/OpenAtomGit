@@ -1,3 +1,4 @@
+import common from '@ohos.app.ability.common';
 import { TokenManager } from '../auth/TokenManager';
 import { SessionManager } from '../auth/SessionManager';
 import { AtomGitUserService } from '../service/AtomGitUserService';
@@ -16,7 +17,7 @@ export class LoginStore {
     return this.token.length > 0;
   }
 
-  async loginWithToken(): Promise<boolean> {
+  async loginWithToken(context: common.UIAbilityContext): Promise<boolean> {
     if (!this.canLogin()) {
       this.errorMessage = 'Token is required';
       this.isLoggedIn = false;
@@ -30,15 +31,15 @@ export class LoginStore {
       return false;
     }
 
-    TokenManager.setToken(this.token);
+    await TokenManager.saveToken(context, this.token);
     SessionManager.setCurrentUser(currentUser);
     this.isLoggedIn = true;
     this.errorMessage = '';
     return true;
   }
 
-  logout(): void {
-    TokenManager.clear();
+  async logout(context: common.UIAbilityContext): Promise<void> {
+    await TokenManager.clearSavedToken(context);
     SessionManager.clear();
     this.token = '';
     this.isLoggedIn = false;
