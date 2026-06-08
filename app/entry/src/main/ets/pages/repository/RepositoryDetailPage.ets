@@ -1,6 +1,8 @@
 import { AppRoute } from '../../navigation/AppRoute';
+import { IssueModel } from '../../model/IssueModel';
 import { RepositoryFileModel } from '../../model/RepositoryFileModel';
 import { RepositoryModel } from '../../model/RepositoryModel';
+import { AtomGitIssueService } from '../../service/AtomGitIssueService';
 import { AtomGitRepositoryService } from '../../service/AtomGitRepositoryService';
 import { RepositoryStore } from '../../store/RepositoryStore';
 
@@ -11,15 +13,18 @@ export struct RepositoryDetailPage {
   @State isReadmeLoading: boolean = false;
   @State isFilesLoading: boolean = false;
   @State isFileContentLoading: boolean = false;
+  @State isIssuesLoading: boolean = false;
   @State errorMessage: string = '';
   @State readmeMessage: string = '';
   @State filesMessage: string = '';
   @State fileContentMessage: string = '';
+  @State issuesMessage: string = '';
   @State readmeContent: string = '';
   @State currentPath: string = '';
   @State selectedFilePath: string = '';
   @State fileContent: string = '';
   @State files: RepositoryFileModel[] = [];
+  @State issues: IssueModel[] = [];
   @State repository: RepositoryModel | null = RepositoryStore.getSelectedRepository();
 
   async aboutToAppear(): Promise<void> {
@@ -42,6 +47,7 @@ export struct RepositoryDetailPage {
 
     await this.loadFiles('');
     await this.loadReadme();
+    await this.loadIssues();
   }
 
   async loadReadme(): Promise<void> {
@@ -61,6 +67,23 @@ export struct RepositoryDetailPage {
 
     this.readmeContent = content.length > 1200 ? content.substring(0, 1200) + '\n...' : content;
     this.readmeMessage = '';
+  }
+
+  async loadIssues(): Promise<void> {
+    if (this.repository === null) {
+      return;
+    }
+
+    this.isIssuesLoading = true;
+    const result = await AtomGitIssueService.getOpenIssues(this.repository);
+    this.isIssuesLoading = false;
+    this.issues = result;
+
+    if (result.length === 0) {
+      this.issuesMessage = 'No open issues found';
+    } else {
+      this.issuesMessage = '';
+    }
   }
 
   async loadFiles(targetPath: string): Promise<void> {
@@ -295,7 +318,41 @@ export struct RepositoryDetailPage {
             .borderRadius(12)
         }
 
-        Text('Issue 入口将在后续版本接入。')
+        Text('Issues')
+          .fontSize(22)
+          .fontWeight(FontWeight.Bold)
+          .margin({ top: 28 })
+
+        if (this.isIssuesLoading) {
+          Text('Loading issues...')
+            .fontSize(15)
+            .margin({ top: 12 })
+        }
+
+        if (this.issuesMessage.length > 0) {
+          Text(this.issuesMessage)
+            .fontSize(14)
+            .fontColor('#6B7280')
+            .margin({ top: 12 })
+        }
+
+        ForEach(this.issues, (item: IssueModel) => {
+          Column() {
+            Text('#' + item.number.toString() + ' ' + item.title)
+              .fontSize(15)
+              .fontWeight(FontWeight.Bold)
+            Text(item.state + (item.author.length > 0 ? ' · ' + item.author : ''))
+              .fontSize(12)
+              .margin({ top: 6 })
+          }
+          .width('100%')
+          .padding(12)
+          .margin({ top: 8 })
+          .backgroundColor(Color.White)
+          .borderRadius(12)
+        }, (item: IssueModel) => item.number.toString())
+
+        Text('Issue 详情将在后续版本接入。')
           .fontSize(14)
           .margin({ top: 24, bottom: 24 })
       }
