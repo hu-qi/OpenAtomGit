@@ -30,4 +30,24 @@ export class AtomGitIssueService {
       return [];
     }
   }
+
+  static async getIssueDetail(repository: RepositoryModel, issueNumber: number): Promise<IssueModel | null> {
+    const token = TokenManager.getToken();
+    if (token.length === 0 || repository.owner.length === 0 || repository.name.length === 0 || issueNumber <= 0) {
+      return null;
+    }
+
+    const path = '/repos/' + encodeURIComponent(repository.owner) + '/' + encodeURIComponent(repository.name) + '/issues/' + issueNumber.toString();
+    const body = await AtomGitHttpClient.get(path, token);
+    if (body.length === 0) {
+      return null;
+    }
+
+    try {
+      const dto = JSON.parse(body) as IssueDto;
+      return IssueMapper.fromDto(dto);
+    } catch (error) {
+      return null;
+    }
+  }
 }
