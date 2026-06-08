@@ -37,7 +37,7 @@ export struct AppShell {
       if (activeRoute === AppRoute.HOME) {
         MainPage({ onNavigate: (route: string) => { this.currentRoute = route } })
       } else if (activeRoute === AppRoute.SEARCH) {
-        SearchPage()
+        SearchPage({ onNavigate: (route: string) => { this.currentRoute = route } })
       } else {
         AccountPage({ onNavigate: (route: string) => { this.currentRoute = route } })
       }
