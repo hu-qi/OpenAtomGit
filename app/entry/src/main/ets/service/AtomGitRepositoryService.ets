@@ -24,4 +24,24 @@ export class AtomGitRepositoryService {
       return null;
     }
   }
+
+  static async getReadme(repository: RepositoryModel): Promise<string> {
+    const token = TokenManager.getToken();
+    if (token.length === 0 || repository.owner.length === 0 || repository.name.length === 0) {
+      return '';
+    }
+
+    const path = '/repos/' + encodeURIComponent(repository.owner) + '/' + encodeURIComponent(repository.name) + '/readme';
+    const body = await AtomGitHttpClient.get(path, token);
+    if (body.length === 0) {
+      return '';
+    }
+
+    try {
+      const parsed = JSON.parse(body) as Record<string, string>;
+      return parsed.content || parsed.html || parsed.text || body;
+    } catch (error) {
+      return body;
+    }
+  }
 }
