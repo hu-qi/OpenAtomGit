@@ -1,4 +1,5 @@
 import { AppRoute } from '../../navigation/AppRoute';
+import { IssueCommentModel } from '../../model/IssueCommentModel';
 import { IssueModel } from '../../model/IssueModel';
 import { RepositoryFileModel } from '../../model/RepositoryFileModel';
 import { RepositoryModel } from '../../model/RepositoryModel';
@@ -15,18 +16,21 @@ export struct RepositoryDetailPage {
   @State isFileContentLoading: boolean = false;
   @State isIssuesLoading: boolean = false;
   @State isIssueDetailLoading: boolean = false;
+  @State isIssueCommentsLoading: boolean = false;
   @State errorMessage: string = '';
   @State readmeMessage: string = '';
   @State filesMessage: string = '';
   @State fileContentMessage: string = '';
   @State issuesMessage: string = '';
   @State issueDetailMessage: string = '';
+  @State issueCommentsMessage: string = '';
   @State readmeContent: string = '';
   @State currentPath: string = '';
   @State selectedFilePath: string = '';
   @State fileContent: string = '';
   @State files: RepositoryFileModel[] = [];
   @State issues: IssueModel[] = [];
+  @State issueComments: IssueCommentModel[] = [];
   @State selectedIssue: IssueModel | null = null;
   @State repository: RepositoryModel | null = RepositoryStore.getSelectedRepository();
 
@@ -96,6 +100,8 @@ export struct RepositoryDetailPage {
 
     this.selectedIssue = issue;
     this.issueDetailMessage = '';
+    this.issueComments = [];
+    this.issueCommentsMessage = '';
     this.isIssueDetailLoading = true;
     const detail = await AtomGitIssueService.getIssueDetail(this.repository, issue.number);
     this.isIssueDetailLoading = false;
@@ -106,6 +112,24 @@ export struct RepositoryDetailPage {
     }
 
     this.selectedIssue = detail;
+    await this.loadIssueComments(detail.number);
+  }
+
+  async loadIssueComments(issueNumber: number): Promise<void> {
+    if (this.repository === null) {
+      return;
+    }
+
+    this.isIssueCommentsLoading = true;
+    const result = await AtomGitIssueService.getIssueComments(this.repository, issueNumber);
+    this.isIssueCommentsLoading = false;
+    this.issueComments = result;
+
+    if (result.length === 0) {
+      this.issueCommentsMessage = 'No comments found';
+    } else {
+      this.issueCommentsMessage = '';
+    }
   }
 
   async loadFiles(targetPath: string): Promise<void> {
@@ -416,9 +440,47 @@ export struct RepositoryDetailPage {
             .margin({ top: 12 })
             .backgroundColor(Color.White)
             .borderRadius(12)
+
+          Text('Comments')
+            .fontSize(20)
+            .fontWeight(FontWeight.Bold)
+            .margin({ top: 20 })
+
+          if (this.isIssueCommentsLoading) {
+            Text('Loading issue comments...')
+              .fontSize(15)
+              .margin({ top: 12 })
+          }
+
+          if (this.issueCommentsMessage.length > 0) {
+            Text(this.issueCommentsMessage)
+              .fontSize(14)
+              .fontColor('#6B7280')
+              .margin({ top: 12 })
+          }
+
+          ForEach(this.issueComments, (item: IssueCommentModel) => {
+            Column() {
+              Text(item.author.length > 0 ? item.author : 'Unknown')
+                .fontSize(14)
+                .fontWeight(FontWeight.Bold)
+              Text(item.updatedAt.length > 0 ? 'Updated: ' + item.updatedAt : '')
+                .fontSize(12)
+                .margin({ top: 4 })
+              Text(item.body.length > 0 ? item.body : 'No comment body')
+                .fontSize(13)
+                .lineHeight(20)
+                .margin({ top: 8 })
+            }
+            .width('100%')
+            .padding(12)
+            .margin({ top: 8 })
+            .backgroundColor(Color.White)
+            .borderRadius(12)
+          }, (item: IssueCommentModel) => item.id.toString())
         }
 
-        Text('Issue comments 将在后续版本接入。')
+        Text('Issue comments reply 将在后续版本接入。')
           .fontSize(14)
           .margin({ top: 24, bottom: 24 })
       }
