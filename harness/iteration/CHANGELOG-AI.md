@@ -48,6 +48,10 @@
 - Added repository files loading by path.
 - Updated RepositoryDetailPage with directory navigation and parent path support.
 - Updated repo manual test for directory navigation.
+- Extended RepositoryFileDto for file content.
+- Added repository file content service method.
+- Updated RepositoryDetailPage with file preview state and UI.
+- Updated repo manual test for file preview.
 
 ## Rule
 
