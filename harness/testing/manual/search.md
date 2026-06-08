@@ -11,3 +11,8 @@
 - Tap search button.
 - Searching text appears.
 - Repository result list appears or empty state appears.
+- Tap one repository result.
+- Repository detail page appears.
+- Selected repository full name appears.
+- Tap Back.
+- Search page appears again.
