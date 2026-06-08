@@ -39,7 +39,7 @@ export struct AppShell {
       } else if (activeRoute === AppRoute.SEARCH) {
         SearchPage()
       } else {
-        AccountPage()
+        AccountPage({ onNavigate: (route: string) => { this.currentRoute = route } })
       }
 
       this.BottomTabs(activeRoute)
