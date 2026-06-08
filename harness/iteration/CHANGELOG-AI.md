@@ -17,6 +17,10 @@
 - Added Internet permission to module config.
 - Changed LoginStore and LoginPage to validate token with AtomGit user API.
 - Updated auth manual test for valid and invalid token checks.
+- Added UserDto, UserMapper and AtomGitUserService.
+- Added SessionManager for current user state.
+- Stored current user after login and displayed it on Account page.
+- Updated auth manual test for current user display.
 
 ## Rule
 
