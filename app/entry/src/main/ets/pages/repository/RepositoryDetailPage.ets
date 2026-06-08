@@ -14,6 +14,7 @@ export struct RepositoryDetailPage {
   @State readmeMessage: string = '';
   @State filesMessage: string = '';
   @State readmeContent: string = '';
+  @State currentPath: string = '';
   @State files: RepositoryFileModel[] = [];
   @State repository: RepositoryModel | null = RepositoryStore.getSelectedRepository();
 
@@ -35,7 +36,7 @@ export struct RepositoryDetailPage {
       this.errorMessage = '';
     }
 
-    await this.loadFiles();
+    await this.loadFiles('');
     await this.loadReadme();
   }
 
@@ -58,13 +59,14 @@ export struct RepositoryDetailPage {
     this.readmeMessage = '';
   }
 
-  async loadFiles(): Promise<void> {
+  async loadFiles(targetPath: string): Promise<void> {
     if (this.repository === null) {
       return;
     }
 
     this.isFilesLoading = true;
-    const result = await AtomGitRepositoryService.getRootFiles(this.repository);
+    this.currentPath = targetPath;
+    const result = await AtomGitRepositoryService.getFiles(this.repository, targetPath);
     this.isFilesLoading = false;
     this.files = result;
 
@@ -73,6 +75,16 @@ export struct RepositoryDetailPage {
     } else {
       this.filesMessage = '';
     }
+  }
+
+  async goParentPath(): Promise<void> {
+    if (this.currentPath.length === 0) {
+      return;
+    }
+
+    const index = this.currentPath.lastIndexOf('/');
+    const parentPath = index < 0 ? '' : this.currentPath.substring(0, index);
+    await this.loadFiles(parentPath);
   }
 
   build() {
@@ -129,6 +141,23 @@ export struct RepositoryDetailPage {
           .fontWeight(FontWeight.Bold)
           .margin({ top: 28 })
 
+        Row() {
+          Text(this.currentPath.length === 0 ? 'Path: /' : 'Path: /' + this.currentPath)
+            .fontSize(13)
+            .layoutWeight(1)
+
+          if (this.currentPath.length > 0) {
+            Text('Up')
+              .fontSize(13)
+              .fontWeight(FontWeight.Bold)
+              .onClick(async () => {
+                await this.goParentPath();
+              })
+          }
+        }
+        .width('100%')
+        .margin({ top: 8 })
+
         if (this.isFilesLoading) {
           Text('Loading files...')
             .fontSize(15)
@@ -158,12 +187,23 @@ export struct RepositoryDetailPage {
                 .margin({ top: 4 })
             }
             .layoutWeight(1)
+
+            if (item.isDirectory()) {
+              Text('Open')
+                .fontSize(12)
+                .fontWeight(FontWeight.Bold)
+            }
           }
           .width('100%')
           .padding(12)
           .margin({ top: 8 })
           .backgroundColor(Color.White)
           .borderRadius(12)
+          .onClick(async () => {
+            if (item.isDirectory()) {
+              await this.loadFiles(item.path);
+            }
+          })
         }, (item: RepositoryFileModel) => item.path)
 
         Text('README')
