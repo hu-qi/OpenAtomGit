@@ -38,7 +38,11 @@ export struct RepositoryDetailPage {
   @State selectedIssue: IssueModel | null = null;
   @State repository: RepositoryModel | null = RepositoryStore.getSelectedRepository();
 
-  async aboutToAppear(): Promise<void> {
+  aboutToAppear(): void {
+    this.loadRepositoryDetail();
+  }
+
+  async loadRepositoryDetail(): Promise<void> {
     if (this.repository === null) {
       this.errorMessage = 'No repository selected';
       return;
