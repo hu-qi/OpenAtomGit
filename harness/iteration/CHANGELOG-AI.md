@@ -66,6 +66,8 @@
 - Updated repo and issue manual tests for issue comments.
 - Added RepositorySummarySection component.
 - Refactored RepositoryDetailPage to use the summary section.
+- Added RepositoryFilesSection component.
+- Refactored RepositoryDetailPage to use the files section.
 
 ## Rule
 
