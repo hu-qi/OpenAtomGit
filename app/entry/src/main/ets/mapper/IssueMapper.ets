@@ -3,7 +3,11 @@ import { IssueModel } from '../model/IssueModel';
 
 export class IssueMapper {
   static fromDto(dto: IssueDto): IssueModel {
-    const author = dto.user?.login || dto.user?.name || '';
+    let author = '';
+    if (dto.user !== undefined) {
+      author = dto.user.login || dto.user.name || '';
+    }
+
     return new IssueModel(
       dto.number || 0,
       dto.title || '',
