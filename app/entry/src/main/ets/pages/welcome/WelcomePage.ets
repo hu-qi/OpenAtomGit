@@ -1,9 +1,32 @@
+import common from '@ohos.app.ability.common';
 import { AppRoute } from '../../navigation/AppRoute';
 import { FeatureText } from '../../common/FeatureText';
+import { TokenManager } from '../../auth/TokenManager';
+import { SessionManager } from '../../auth/SessionManager';
+import { AtomGitUserService } from '../../service/AtomGitUserService';
 
 @Component
 export struct WelcomePage {
   onNavigate: (route: string) => void = () => {};
+  @State isRestoring: boolean = false;
+
+  async aboutToAppear(): Promise<void> {
+    if (this.isRestoring) {
+      return;
+    }
+
+    this.isRestoring = true;
+    const context = getContext(this) as common.UIAbilityContext;
+    const token = await TokenManager.restoreToken(context);
+    if (token.length > 0) {
+      const currentUser = await AtomGitUserService.getCurrentUser(token);
+      if (currentUser !== null) {
+        SessionManager.setCurrentUser(currentUser);
+        this.onNavigate(AppRoute.HOME);
+      }
+    }
+    this.isRestoring = false;
+  }
 
   build() {
     Column() {
@@ -16,6 +39,12 @@ export struct WelcomePage {
       Text('从 0 构建 AtomGit HarmonyOS 客户端')
         .fontSize(16)
         .margin({ top: 12 })
+
+      if (this.isRestoring) {
+        Text('正在恢复登录态...')
+          .fontSize(15)
+          .margin({ top: 20 })
+      }
 
       Column() {
         Text('项目目标')
