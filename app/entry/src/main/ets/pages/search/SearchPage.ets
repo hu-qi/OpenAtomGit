@@ -1,8 +1,11 @@
+import { AppRoute } from '../../navigation/AppRoute';
 import { RepositoryModel } from '../../model/RepositoryModel';
+import { RepositoryStore } from '../../store/RepositoryStore';
 import { SearchStore } from '../../store/SearchStore';
 
 @Component
 export struct SearchPage {
+  onNavigate: (route: string) => void = () => {};
   private searchStore: SearchStore = new SearchStore();
   @State keyword: string = '';
   @State isLoading: boolean = false;
@@ -58,11 +61,19 @@ export struct SearchPage {
               Text(item.description.length > 0 ? item.description : 'No description')
                 .fontSize(14)
                 .margin({ top: 6 })
+
+              Text('Tap to view detail')
+                .fontSize(12)
+                .margin({ top: 8 })
             }
             .width('100%')
             .padding(14)
             .backgroundColor(Color.White)
             .borderRadius(12)
+            .onClick(() => {
+              RepositoryStore.setSelectedRepository(item);
+              this.onNavigate(AppRoute.REPOSITORY_DETAIL);
+            })
           }
           .margin({ top: 10 })
         }, (item: RepositoryModel) => item.getFullName())
