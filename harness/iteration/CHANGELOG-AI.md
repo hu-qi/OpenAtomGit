@@ -45,6 +45,9 @@
 - Added repository root files service method.
 - Updated RepositoryDetailPage with root file list entry.
 - Updated repo manual test for file tree entry.
+- Added repository files loading by path.
+- Updated RepositoryDetailPage with directory navigation and parent path support.
+- Updated repo manual test for directory navigation.
 
 ## Rule
 
