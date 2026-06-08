@@ -13,5 +13,7 @@
 - Tap login button.
 - Main page appears.
 - Open Account tab.
+- Current user nickname and username appear.
+- Token saved locally appears.
 - Tap Logout.
 - Login page appears again.
