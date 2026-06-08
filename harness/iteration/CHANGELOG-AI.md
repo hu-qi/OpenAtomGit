@@ -13,6 +13,10 @@
 - Wired LoginPage to LoginStore for local token validation.
 - Added Account logout action and routed it through AppShell.
 - Updated auth manual test for login and logout flow.
+- Added AtomGitAuthService and basic HttpClient GET request.
+- Added Internet permission to module config.
+- Changed LoginStore and LoginPage to validate token with AtomGit user API.
+- Updated auth manual test for valid and invalid token checks.
 
 ## Rule
 
