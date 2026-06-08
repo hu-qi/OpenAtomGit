@@ -10,6 +10,10 @@
 - Description appears or No description appears.
 - Stars, Forks and Watchers metrics appear.
 - Default branch appears when API returns it.
+- Files section appears.
+- Loading files text appears briefly.
+- Root file list appears or No files found appears.
+- File rows show DIR or FILE label.
 - README section appears.
 - Loading README text appears briefly.
 - README preview appears or README not found appears.
