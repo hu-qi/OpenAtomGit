@@ -1,5 +1,6 @@
 import { TokenManager } from '../auth/TokenManager';
-import { AtomGitAuthService } from '../service/AtomGitAuthService';
+import { SessionManager } from '../auth/SessionManager';
+import { AtomGitUserService } from '../service/AtomGitUserService';
 
 export class LoginStore {
   token: string = '';
@@ -22,14 +23,15 @@ export class LoginStore {
       return false;
     }
 
-    const isValid = await AtomGitAuthService.validateToken(this.token);
-    if (!isValid) {
+    const currentUser = await AtomGitUserService.getCurrentUser(this.token);
+    if (currentUser === null) {
       this.errorMessage = 'Token validation failed';
       this.isLoggedIn = false;
       return false;
     }
 
     TokenManager.setToken(this.token);
+    SessionManager.setCurrentUser(currentUser);
     this.isLoggedIn = true;
     this.errorMessage = '';
     return true;
@@ -37,6 +39,7 @@ export class LoginStore {
 
   logout(): void {
     TokenManager.clear();
+    SessionManager.clear();
     this.token = '';
     this.isLoggedIn = false;
     this.errorMessage = '';
