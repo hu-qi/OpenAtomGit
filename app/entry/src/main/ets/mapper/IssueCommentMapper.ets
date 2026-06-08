@@ -3,7 +3,11 @@ import { IssueCommentModel } from '../model/IssueCommentModel';
 
 export class IssueCommentMapper {
   static fromDto(dto: IssueCommentDto): IssueCommentModel {
-    const author = dto.user?.login || dto.user?.name || '';
+    let author = '';
+    if (dto.user !== undefined) {
+      author = dto.user.login || dto.user.name || '';
+    }
+
     return new IssueCommentModel(dto.id || 0, dto.body || '', author, dto.created_at || '', dto.updated_at || '');
   }
 
