@@ -25,6 +25,11 @@
 - Persisted token on login and cleared saved token on logout.
 - Restored saved token on WelcomePage and auto-entered Main when valid.
 - Updated auth manual test for token persistence.
+- Added RepositoryDto and RepositoryMapper.
+- Added query parameter support to AtomGitHttpClient.
+- Added AtomGitSearchService for repository search.
+- Wired SearchStore and SearchPage to repository search MVP.
+- Updated search manual test for repository search.
 
 ## Rule
 
