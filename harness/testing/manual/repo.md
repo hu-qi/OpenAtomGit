@@ -27,6 +27,10 @@
 - README section appears.
 - Loading README text appears briefly.
 - README preview appears or README not found appears.
+- Issues section appears.
+- Loading issues text appears briefly.
+- Open issue list appears or No open issues found appears.
+- Issue rows show number, title, state and author when available.
 - Page can scroll to bottom.
 - Tap Back.
 - Search page appears again.
