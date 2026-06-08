@@ -49,12 +49,16 @@ export class AtomGitRepositoryService {
   }
 
   static async getRootFiles(repository: RepositoryModel): Promise<RepositoryFileModel[]> {
+    return await AtomGitRepositoryService.getFiles(repository, '');
+  }
+
+  static async getFiles(repository: RepositoryModel, targetPath: string): Promise<RepositoryFileModel[]> {
     const token = TokenManager.getToken();
     if (token.length === 0 || repository.owner.length === 0 || repository.name.length === 0) {
       return [];
     }
 
-    const path = '/repos/' + encodeURIComponent(repository.owner) + '/' + encodeURIComponent(repository.name) + '/contents';
+    const path = '/repos/' + encodeURIComponent(repository.owner) + '/' + encodeURIComponent(repository.name) + '/contents' + (targetPath.length > 0 ? '/' + encodeURIComponent(targetPath) : '');
     const body = await AtomGitHttpClient.get(path, token);
     if (body.length === 0) {
       return [];
