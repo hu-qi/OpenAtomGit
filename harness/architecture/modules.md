@@ -10,7 +10,7 @@ app/entry/src/main/ets/
 
 Screen level pages.
 
-Planned pages:
+Current pages:
 
 - pages/Index.ets
 - pages/welcome/WelcomePage.ets
@@ -19,6 +19,11 @@ Planned pages:
 - pages/search/SearchPage.ets
 - pages/account/AccountPage.ets
 - pages/repository/RepositoryDetailPage.ets
+
+Future naming cleanup:
+
+- MainPage may become HomePage.
+- AccountPage may become MinePage or ProfilePage.
 
 ## common
 
@@ -90,3 +95,14 @@ Planned dao:
 - RepositoryDao
 - IssueDao
 - HistoryDao
+
+## infra
+
+Shared engineering files.
+
+Planned files:
+
+- style constants
+- logger
+- error mapper
+- debug helpers
