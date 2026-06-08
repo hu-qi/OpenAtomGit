@@ -7,6 +7,7 @@ import { IssueCommentModel } from '../model/IssueCommentModel';
 import { IssueModel } from '../model/IssueModel';
 import { RepositoryModel } from '../model/RepositoryModel';
 import { AtomGitHttpClient } from './AtomGitHttpClient';
+import { RepositoryPathHelper } from './RepositoryPathHelper';
 
 export class AtomGitIssueService {
   static async getOpenIssues(repository: RepositoryModel): Promise<IssueModel[]> {
@@ -15,7 +16,7 @@ export class AtomGitIssueService {
       return [];
     }
 
-    const path = '/repos/' + encodeURIComponent(repository.owner) + '/' + encodeURIComponent(repository.name) + '/issues';
+    const path = RepositoryPathHelper.issuesPath(repository.owner, repository.name);
     const body = await AtomGitHttpClient.get(path, token, {
       state: 'open',
       page: '1',
@@ -40,7 +41,7 @@ export class AtomGitIssueService {
       return null;
     }
 
-    const path = '/repos/' + encodeURIComponent(repository.owner) + '/' + encodeURIComponent(repository.name) + '/issues/' + issueNumber.toString();
+    const path = RepositoryPathHelper.issueDetailPath(repository.owner, repository.name, issueNumber);
     const body = await AtomGitHttpClient.get(path, token);
     if (body.length === 0) {
       return null;
@@ -60,7 +61,7 @@ export class AtomGitIssueService {
       return [];
     }
 
-    const path = '/repos/' + encodeURIComponent(repository.owner) + '/' + encodeURIComponent(repository.name) + '/issues/' + issueNumber.toString() + '/comments';
+    const path = RepositoryPathHelper.issueCommentsPath(repository.owner, repository.name, issueNumber);
     const body = await AtomGitHttpClient.get(path, token, {
       page: '1',
       per_page: '20'
