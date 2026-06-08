@@ -21,6 +21,10 @@
 - Added SessionManager for current user state.
 - Stored current user after login and displayed it on Account page.
 - Updated auth manual test for current user display.
+- Added TokenStorage with HarmonyOS Preferences.
+- Persisted token on login and cleared saved token on logout.
+- Restored saved token on WelcomePage and auto-entered Main when valid.
+- Updated auth manual test for token persistence.
 
 ## Rule
 
