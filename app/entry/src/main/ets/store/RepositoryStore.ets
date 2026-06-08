@@ -1,16 +1,17 @@
-export class RepositoryStore {
-  owner: string = '';
-  name: string = '';
+import { RepositoryModel } from '../model/RepositoryModel';
 
-  setRepository(owner: string, name: string): void {
-    this.owner = owner;
-    this.name = name;
+export class RepositoryStore {
+  private static selectedRepository: RepositoryModel | null = null;
+
+  static setSelectedRepository(repository: RepositoryModel): void {
+    RepositoryStore.selectedRepository = repository;
   }
 
-  getFullName(): string {
-    if (this.owner.length === 0 || this.name.length === 0) {
-      return '';
-    }
-    return this.owner + '/' + this.name;
+  static getSelectedRepository(): RepositoryModel | null {
+    return RepositoryStore.selectedRepository;
+  }
+
+  static clearSelectedRepository(): void {
+    RepositoryStore.selectedRepository = null;
   }
 }
