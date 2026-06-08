@@ -7,6 +7,7 @@ import { AtomGitIssueService } from '../../service/AtomGitIssueService';
 import { AtomGitRepositoryService } from '../../service/AtomGitRepositoryService';
 import { RepositoryStore } from '../../store/RepositoryStore';
 import { RepositoryFilesSection } from './RepositoryFilesSection';
+import { RepositoryIssuesSection } from './RepositoryIssuesSection';
 import { RepositoryReadmeSection } from './RepositoryReadmeSection';
 import { RepositorySummarySection } from './RepositorySummarySection';
 
@@ -232,121 +233,20 @@ export struct RepositoryDetailPage {
           readmeContent: this.readmeContent
         })
 
-        Text('Issues')
-          .fontSize(22)
-          .fontWeight(FontWeight.Bold)
-          .margin({ top: 28 })
-
-        if (this.isIssuesLoading) {
-          Text('Loading issues...')
-            .fontSize(15)
-            .margin({ top: 12 })
-        }
-
-        if (this.issuesMessage.length > 0) {
-          Text(this.issuesMessage)
-            .fontSize(14)
-            .fontColor('#6B7280')
-            .margin({ top: 12 })
-        }
-
-        ForEach(this.issues, (item: IssueModel) => {
-          Column() {
-            Text('#' + item.number.toString() + ' ' + item.title)
-              .fontSize(15)
-              .fontWeight(FontWeight.Bold)
-            Text(item.state + (item.author.length > 0 ? ' · ' + item.author : '') + ' · Tap to view detail')
-              .fontSize(12)
-              .margin({ top: 6 })
+        RepositoryIssuesSection({
+          issues: this.issues,
+          selectedIssue: this.selectedIssue,
+          issueComments: this.issueComments,
+          isIssuesLoading: this.isIssuesLoading,
+          isIssueDetailLoading: this.isIssueDetailLoading,
+          isIssueCommentsLoading: this.isIssueCommentsLoading,
+          issuesMessage: this.issuesMessage,
+          issueDetailMessage: this.issueDetailMessage,
+          issueCommentsMessage: this.issueCommentsMessage,
+          onOpenIssue: (issue: IssueModel) => {
+            this.loadIssueDetail(issue);
           }
-          .width('100%')
-          .padding(12)
-          .margin({ top: 8 })
-          .backgroundColor(Color.White)
-          .borderRadius(12)
-          .onClick(async () => {
-            await this.loadIssueDetail(item);
-          })
-        }, (item: IssueModel) => item.number.toString())
-
-        if (this.selectedIssue !== null) {
-          Text('Issue Detail')
-            .fontSize(22)
-            .fontWeight(FontWeight.Bold)
-            .margin({ top: 28 })
-
-          if (this.isIssueDetailLoading) {
-            Text('Loading issue detail...')
-              .fontSize(15)
-              .margin({ top: 12 })
-          }
-
-          if (this.issueDetailMessage.length > 0) {
-            Text(this.issueDetailMessage)
-              .fontSize(14)
-              .fontColor('#6B7280')
-              .margin({ top: 12 })
-          }
-
-          Text('#' + this.selectedIssue.number.toString() + ' ' + this.selectedIssue.title)
-            .fontSize(18)
-            .fontWeight(FontWeight.Bold)
-            .margin({ top: 12 })
-
-          Text(this.selectedIssue.state + ' · comments ' + this.selectedIssue.comments.toString())
-            .fontSize(13)
-            .margin({ top: 8 })
-
-          Text(this.selectedIssue.updatedAt.length > 0 ? 'Updated: ' + this.selectedIssue.updatedAt : '')
-            .fontSize(12)
-            .margin({ top: 6 })
-
-          Text(this.selectedIssue.body.length > 0 ? this.selectedIssue.body : 'No issue body')
-            .fontSize(13)
-            .lineHeight(20)
-            .padding(12)
-            .margin({ top: 12 })
-            .backgroundColor(Color.White)
-            .borderRadius(12)
-
-          Text('Comments')
-            .fontSize(20)
-            .fontWeight(FontWeight.Bold)
-            .margin({ top: 20 })
-
-          if (this.isIssueCommentsLoading) {
-            Text('Loading issue comments...')
-              .fontSize(15)
-              .margin({ top: 12 })
-          }
-
-          if (this.issueCommentsMessage.length > 0) {
-            Text(this.issueCommentsMessage)
-              .fontSize(14)
-              .fontColor('#6B7280')
-              .margin({ top: 12 })
-          }
-
-          ForEach(this.issueComments, (item: IssueCommentModel) => {
-            Column() {
-              Text(item.author.length > 0 ? item.author : 'Unknown')
-                .fontSize(14)
-                .fontWeight(FontWeight.Bold)
-              Text(item.updatedAt.length > 0 ? 'Updated: ' + item.updatedAt : '')
-                .fontSize(12)
-                .margin({ top: 4 })
-              Text(item.body.length > 0 ? item.body : 'No comment body')
-                .fontSize(13)
-                .lineHeight(20)
-                .margin({ top: 8 })
-            }
-            .width('100%')
-            .padding(12)
-            .margin({ top: 8 })
-            .backgroundColor(Color.White)
-            .borderRadius(12)
-          }, (item: IssueCommentModel) => item.id.toString())
-        }
+        })
 
         Text('Issue comments reply 将在后续版本接入。')
           .fontSize(14)
