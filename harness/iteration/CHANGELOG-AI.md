@@ -70,6 +70,8 @@
 - Refactored RepositoryDetailPage to use the files section.
 - Added RepositoryReadmeSection component.
 - Refactored RepositoryDetailPage to use the README section.
+- Added RepositoryIssuesSection component.
+- Refactored RepositoryDetailPage to use the issues section.
 
 ## Rule
 
