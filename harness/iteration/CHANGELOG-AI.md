@@ -10,6 +10,9 @@
 - Added service placeholders for AtomGitConfig and AtomGitHttpClient.
 - Added auth, store, dao and model placeholders.
 - Documented harness usage in README.
+- Wired LoginPage to LoginStore for local token validation.
+- Added Account logout action and routed it through AppShell.
+- Updated auth manual test for login and logout flow.
 
 ## Rule
 
