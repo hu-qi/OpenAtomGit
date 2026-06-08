@@ -1,8 +1,12 @@
 import { AppRoute } from '../../navigation/AppRoute';
+import { LoginStore } from '../../store/LoginStore';
 
 @Component
 export struct LoginPage {
   onNavigate: (route: string) => void = () => {};
+  private loginStore: LoginStore = new LoginStore();
+  @State tokenValue: string = '';
+  @State errorMessage: string = '';
 
   build() {
     Column() {
@@ -29,17 +33,29 @@ export struct LoginPage {
           .fontSize(22)
           .fontWeight(FontWeight.Bold)
 
-        Text('后续会接入用户接口验证 Token，并保存登录态。')
+        Text('当前版本先完成本地状态流转，下一步接入真实用户接口验证。')
           .fontSize(15)
           .lineHeight(24)
           .margin({ top: 12 })
 
-        TextInput({ placeholder: '请输入 AtomGit Token' })
+        TextInput({ placeholder: '请输入 AtomGit Token', text: this.tokenValue })
           .height(48)
           .fontSize(15)
           .backgroundColor('#F3F4F6')
           .borderRadius(12)
           .margin({ top: 28 })
+          .onChange((value: string) => {
+            this.tokenValue = value;
+            this.loginStore.setToken(value);
+            this.errorMessage = '';
+          })
+
+        if (this.errorMessage.length > 0) {
+          Text(this.errorMessage)
+            .fontSize(13)
+            .fontColor('#E5484D')
+            .margin({ top: 8 })
+        }
 
         Button('登录并进入首页')
           .width('100%')
@@ -47,7 +63,12 @@ export struct LoginPage {
           .fontSize(16)
           .margin({ top: 20 })
           .onClick(() => {
-            this.onNavigate(AppRoute.HOME)
+            const success = this.loginStore.loginWithToken();
+            if (success) {
+              this.onNavigate(AppRoute.HOME)
+            } else {
+              this.errorMessage = this.loginStore.errorMessage;
+            }
           })
       }
       .width('90%')
