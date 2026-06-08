@@ -1,4 +1,5 @@
 import { TokenManager } from '../auth/TokenManager';
+import { AtomGitAuthService } from '../service/AtomGitAuthService';
 
 export class LoginStore {
   token: string = '';
@@ -14,9 +15,16 @@ export class LoginStore {
     return this.token.length > 0;
   }
 
-  loginWithToken(): boolean {
+  async loginWithToken(): Promise<boolean> {
     if (!this.canLogin()) {
       this.errorMessage = 'Token is required';
+      this.isLoggedIn = false;
+      return false;
+    }
+
+    const isValid = await AtomGitAuthService.validateToken(this.token);
+    if (!isValid) {
+      this.errorMessage = 'Token validation failed';
       this.isLoggedIn = false;
       return false;
     }
