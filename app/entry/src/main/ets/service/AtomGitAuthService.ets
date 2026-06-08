@@ -1,4 +1,4 @@
-import { AtomGitHttpClient } from './AtomGitHttpClient';
+import { AtomGitUserService } from './AtomGitUserService';
 
 export class AtomGitAuthService {
   static async validateToken(token: string): Promise<boolean> {
@@ -6,6 +6,7 @@ export class AtomGitAuthService {
       return false;
     }
 
-    return await AtomGitHttpClient.get('/user', token);
+    const currentUser = await AtomGitUserService.getCurrentUser(token);
+    return currentUser !== null;
   }
 }
