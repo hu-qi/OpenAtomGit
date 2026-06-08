@@ -3,4 +3,6 @@ export interface RepositoryFileDto {
   path?: string;
   type?: string;
   size?: number;
+  content?: string;
+  encoding?: string;
 }
