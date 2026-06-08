@@ -14,6 +14,12 @@
 - Loading files text appears briefly.
 - Root file list appears or No files found appears.
 - File rows show DIR or FILE label.
+- Current path shows Path: /.
+- Tap one directory row if present.
+- Current path updates to selected directory path.
+- Child files load or No files found appears.
+- Tap Up.
+- Current path returns to parent path.
 - README section appears.
 - Loading README text appears briefly.
 - README preview appears or README not found appears.
