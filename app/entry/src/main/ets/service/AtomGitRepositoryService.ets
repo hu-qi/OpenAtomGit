@@ -1,6 +1,9 @@
 import { TokenManager } from '../auth/TokenManager';
 import { RepositoryDto } from '../dto/RepositoryDto';
+import { RepositoryFileDto } from '../dto/RepositoryFileDto';
+import { RepositoryFileMapper } from '../mapper/RepositoryFileMapper';
 import { RepositoryMapper } from '../mapper/RepositoryMapper';
+import { RepositoryFileModel } from '../model/RepositoryFileModel';
 import { RepositoryModel } from '../model/RepositoryModel';
 import { AtomGitHttpClient } from './AtomGitHttpClient';
 
@@ -42,6 +45,26 @@ export class AtomGitRepositoryService {
       return parsed.content || parsed.html || parsed.text || body;
     } catch (error) {
       return body;
+    }
+  }
+
+  static async getRootFiles(repository: RepositoryModel): Promise<RepositoryFileModel[]> {
+    const token = TokenManager.getToken();
+    if (token.length === 0 || repository.owner.length === 0 || repository.name.length === 0) {
+      return [];
+    }
+
+    const path = '/repos/' + encodeURIComponent(repository.owner) + '/' + encodeURIComponent(repository.name) + '/contents';
+    const body = await AtomGitHttpClient.get(path, token);
+    if (body.length === 0) {
+      return [];
+    }
+
+    try {
+      const list = JSON.parse(body) as RepositoryFileDto[];
+      return RepositoryFileMapper.fromDtoList(list);
+    } catch (error) {
+      return [];
     }
   }
 }
