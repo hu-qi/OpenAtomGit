@@ -6,9 +6,18 @@ export class AtomGitHttpClient {
     return AtomGitConfig.API_BASE;
   }
 
-  static async get(path: string, token: string): Promise<string> {
+  static buildQuery(params: Record<string, string>): string {
+    const pairs: string[] = [];
+    Object.keys(params).forEach((key: string) => {
+      pairs.push(encodeURIComponent(key) + '=' + encodeURIComponent(params[key]));
+    });
+    return pairs.length === 0 ? '' : '?' + pairs.join('&');
+  }
+
+  static async get(path: string, token: string, params?: Record<string, string>): Promise<string> {
     const httpRequest = http.createHttp();
-    const url = AtomGitConfig.API_BASE + path;
+    const query = params ? AtomGitHttpClient.buildQuery(params) : '';
+    const url = AtomGitConfig.API_BASE + path + query;
 
     try {
       const response = await httpRequest.request(url, {
