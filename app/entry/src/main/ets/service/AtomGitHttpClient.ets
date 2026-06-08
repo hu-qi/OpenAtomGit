@@ -6,7 +6,7 @@ export class AtomGitHttpClient {
     return AtomGitConfig.API_BASE;
   }
 
-  static async get(path: string, token: string): Promise<boolean> {
+  static async get(path: string, token: string): Promise<string> {
     const httpRequest = http.createHttp();
     const url = AtomGitConfig.API_BASE + path;
 
@@ -21,9 +21,17 @@ export class AtomGitHttpClient {
         connectTimeout: 10000
       });
 
-      return response.responseCode >= 200 && response.responseCode < 300;
+      if (response.responseCode < 200 || response.responseCode >= 300) {
+        return '';
+      }
+
+      if (typeof response.result === 'string') {
+        return response.result;
+      }
+
+      return JSON.stringify(response.result);
     } catch (error) {
-      return false;
+      return '';
     } finally {
       httpRequest.destroy();
     }
