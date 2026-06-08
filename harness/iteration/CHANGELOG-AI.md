@@ -60,6 +60,10 @@
 - Added issue detail service method.
 - Updated RepositoryDetailPage with issue detail state and UI.
 - Updated repo and issue manual tests for issue detail.
+- Added IssueCommentDto, IssueCommentModel and IssueCommentMapper.
+- Added issue comments service method.
+- Updated RepositoryDetailPage with issue comments state and UI.
+- Updated repo and issue manual tests for issue comments.
 
 ## Rule
 
