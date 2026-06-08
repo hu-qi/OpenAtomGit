@@ -9,6 +9,14 @@ import { RepositoryModel } from '../model/RepositoryModel';
 import { AtomGitHttpClient } from './AtomGitHttpClient';
 
 export class AtomGitRepositoryService {
+  static encodeRepositoryPath(targetPath: string): string {
+    if (targetPath.length === 0) {
+      return '';
+    }
+
+    return targetPath.split('/').map((item: string) => encodeURIComponent(item)).join('/');
+  }
+
   static async getRepositoryDetail(repository: RepositoryModel): Promise<RepositoryModel | null> {
     const token = TokenManager.getToken();
     if (token.length === 0 || repository.owner.length === 0 || repository.name.length === 0) {
@@ -59,7 +67,8 @@ export class AtomGitRepositoryService {
       return [];
     }
 
-    const path = '/repos/' + encodeURIComponent(repository.owner) + '/' + encodeURIComponent(repository.name) + '/contents' + (targetPath.length > 0 ? '/' + encodeURIComponent(targetPath) : '');
+    const encodedPath = AtomGitRepositoryService.encodeRepositoryPath(targetPath);
+    const path = '/repos/' + encodeURIComponent(repository.owner) + '/' + encodeURIComponent(repository.name) + '/contents' + (encodedPath.length > 0 ? '/' + encodedPath : '');
     const body = await AtomGitHttpClient.get(path, token);
     if (body.length === 0) {
       return [];
@@ -79,7 +88,8 @@ export class AtomGitRepositoryService {
       return '';
     }
 
-    const path = '/repos/' + encodeURIComponent(repository.owner) + '/' + encodeURIComponent(repository.name) + '/contents/' + encodeURIComponent(filePath);
+    const encodedPath = AtomGitRepositoryService.encodeRepositoryPath(filePath);
+    const path = '/repos/' + encodeURIComponent(repository.owner) + '/' + encodeURIComponent(repository.name) + '/contents/' + encodedPath;
     const body = await AtomGitHttpClient.get(path, token);
     if (body.length === 0) {
       return '';
