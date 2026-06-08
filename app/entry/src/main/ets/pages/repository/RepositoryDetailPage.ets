@@ -7,6 +7,7 @@ import { AtomGitIssueService } from '../../service/AtomGitIssueService';
 import { AtomGitRepositoryService } from '../../service/AtomGitRepositoryService';
 import { RepositoryStore } from '../../store/RepositoryStore';
 import { RepositoryFilesSection } from './RepositoryFilesSection';
+import { RepositoryReadmeSection } from './RepositoryReadmeSection';
 import { RepositorySummarySection } from './RepositorySummarySection';
 
 @Component
@@ -225,33 +226,11 @@ export struct RepositoryDetailPage {
           }
         })
 
-        Text('README')
-          .fontSize(22)
-          .fontWeight(FontWeight.Bold)
-          .margin({ top: 28 })
-
-        if (this.isReadmeLoading) {
-          Text('Loading README...')
-            .fontSize(15)
-            .margin({ top: 12 })
-        }
-
-        if (this.readmeMessage.length > 0) {
-          Text(this.readmeMessage)
-            .fontSize(14)
-            .fontColor('#6B7280')
-            .margin({ top: 12 })
-        }
-
-        if (this.readmeContent.length > 0) {
-          Text(this.readmeContent)
-            .fontSize(13)
-            .lineHeight(20)
-            .padding(12)
-            .margin({ top: 12 })
-            .backgroundColor(Color.White)
-            .borderRadius(12)
-        }
+        RepositoryReadmeSection({
+          isReadmeLoading: this.isReadmeLoading,
+          readmeMessage: this.readmeMessage,
+          readmeContent: this.readmeContent
+        })
 
         Text('Issues')
           .fontSize(22)
