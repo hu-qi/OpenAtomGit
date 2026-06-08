@@ -75,6 +75,7 @@
 - Moved repository detail loading from lifecycle method into loadRepositoryDetail.
 - Added synchronous handlers for repository detail callbacks.
 - Removed optional chaining from issue mappers.
+- Split nested issue user DTO definitions.
 
 ## Rule
 
