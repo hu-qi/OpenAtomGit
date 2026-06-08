@@ -10,5 +10,9 @@
 - Description appears or No description appears.
 - Stars, Forks and Watchers metrics appear.
 - Default branch appears when API returns it.
+- README section appears.
+- Loading README text appears briefly.
+- README preview appears or README not found appears.
+- Page can scroll to bottom.
 - Tap Back.
 - Search page appears again.
