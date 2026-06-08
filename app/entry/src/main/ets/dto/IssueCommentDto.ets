@@ -1,10 +1,12 @@
+export interface IssueCommentUserDto {
+  login?: string;
+  name?: string;
+}
+
 export interface IssueCommentDto {
   id?: number;
   body?: string;
-  user?: {
-    login?: string;
-    name?: string;
-  };
+  user?: IssueCommentUserDto;
   created_at?: string;
   updated_at?: string;
 }
