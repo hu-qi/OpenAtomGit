@@ -77,6 +77,7 @@
 - Removed optional chaining from issue mappers.
 - Split nested issue user DTO definitions.
 - Added RepositoryReadmeDto and used it for README parsing.
+- Preserved slash separators when encoding repository file paths.
 
 ## Rule
 
