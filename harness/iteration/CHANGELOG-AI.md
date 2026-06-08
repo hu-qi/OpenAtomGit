@@ -52,6 +52,10 @@
 - Added repository file content service method.
 - Updated RepositoryDetailPage with file preview state and UI.
 - Updated repo manual test for file preview.
+- Added IssueDto, IssueModel and IssueMapper.
+- Added AtomGitIssueService for open issue list.
+- Updated RepositoryDetailPage with Issues section.
+- Updated repo and issue manual tests for issue list entry.
 
 ## Rule
 
