@@ -1,3 +1,4 @@
+import common from '@ohos.app.ability.common';
 import { AppRoute } from '../../navigation/AppRoute';
 import { TokenManager } from '../../auth/TokenManager';
 import { SessionManager } from '../../auth/SessionManager';
@@ -32,8 +33,9 @@ export struct AccountPage {
         .width('90%')
         .height(48)
         .margin({ top: 24 })
-        .onClick(() => {
-          TokenManager.clear();
+        .onClick(async () => {
+          const context = getContext(this) as common.UIAbilityContext;
+          await TokenManager.clearSavedToken(context);
           SessionManager.clear();
           this.tokenPreview = '';
           this.onNavigate(AppRoute.LOGIN);
