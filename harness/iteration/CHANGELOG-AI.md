@@ -38,6 +38,9 @@
 - Added AtomGitRepositoryService for repository detail API.
 - Updated RepositoryDetailPage to load repository detail and render metrics.
 - Updated repo manual test for detail API.
+- Added repository README service method.
+- Updated RepositoryDetailPage with README preview and scroll layout.
+- Updated repo manual test for README preview.
 
 ## Rule
 
