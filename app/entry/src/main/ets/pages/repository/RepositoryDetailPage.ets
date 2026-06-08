@@ -1,4 +1,5 @@
 import { AppRoute } from '../../navigation/AppRoute';
+import { RepositoryFileModel } from '../../model/RepositoryFileModel';
 import { RepositoryModel } from '../../model/RepositoryModel';
 import { AtomGitRepositoryService } from '../../service/AtomGitRepositoryService';
 import { RepositoryStore } from '../../store/RepositoryStore';
@@ -8,9 +9,12 @@ export struct RepositoryDetailPage {
   onNavigate: (route: string) => void = () => {};
   @State isLoading: boolean = false;
   @State isReadmeLoading: boolean = false;
+  @State isFilesLoading: boolean = false;
   @State errorMessage: string = '';
   @State readmeMessage: string = '';
+  @State filesMessage: string = '';
   @State readmeContent: string = '';
+  @State files: RepositoryFileModel[] = [];
   @State repository: RepositoryModel | null = RepositoryStore.getSelectedRepository();
 
   async aboutToAppear(): Promise<void> {
@@ -31,6 +35,7 @@ export struct RepositoryDetailPage {
       this.errorMessage = '';
     }
 
+    await this.loadFiles();
     await this.loadReadme();
   }
 
@@ -51,6 +56,23 @@ export struct RepositoryDetailPage {
 
     this.readmeContent = content.length > 1200 ? content.substring(0, 1200) + '\n...' : content;
     this.readmeMessage = '';
+  }
+
+  async loadFiles(): Promise<void> {
+    if (this.repository === null) {
+      return;
+    }
+
+    this.isFilesLoading = true;
+    const result = await AtomGitRepositoryService.getRootFiles(this.repository);
+    this.isFilesLoading = false;
+    this.files = result;
+
+    if (result.length === 0) {
+      this.filesMessage = 'No files found';
+    } else {
+      this.filesMessage = '';
+    }
   }
 
   build() {
@@ -102,6 +124,48 @@ export struct RepositoryDetailPage {
           .fontSize(14)
           .margin({ top: 16 })
 
+        Text('Files')
+          .fontSize(22)
+          .fontWeight(FontWeight.Bold)
+          .margin({ top: 28 })
+
+        if (this.isFilesLoading) {
+          Text('Loading files...')
+            .fontSize(15)
+            .margin({ top: 12 })
+        }
+
+        if (this.filesMessage.length > 0) {
+          Text(this.filesMessage)
+            .fontSize(14)
+            .fontColor('#6B7280')
+            .margin({ top: 12 })
+        }
+
+        ForEach(this.files, (item: RepositoryFileModel) => {
+          Row() {
+            Text(item.isDirectory() ? 'DIR' : 'FILE')
+              .fontSize(12)
+              .fontWeight(FontWeight.Bold)
+              .width(44)
+
+            Column() {
+              Text(item.name)
+                .fontSize(15)
+                .fontWeight(FontWeight.Bold)
+              Text(item.path)
+                .fontSize(12)
+                .margin({ top: 4 })
+            }
+            .layoutWeight(1)
+          }
+          .width('100%')
+          .padding(12)
+          .margin({ top: 8 })
+          .backgroundColor(Color.White)
+          .borderRadius(12)
+        }, (item: RepositoryFileModel) => item.path)
+
         Text('README')
           .fontSize(22)
           .fontWeight(FontWeight.Bold)
@@ -130,7 +194,7 @@ export struct RepositoryDetailPage {
             .borderRadius(12)
         }
 
-        Text('文件树、Issue 入口将在后续版本接入。')
+        Text('Issue 入口将在后续版本接入。')
           .fontSize(14)
           .margin({ top: 24, bottom: 24 })
       }
