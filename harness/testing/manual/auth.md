@@ -15,5 +15,11 @@
 - Open Account tab.
 - Current user nickname and username appear.
 - Token saved locally appears.
+- Restart app.
+- Welcome page shows restore status.
+- App enters Main page automatically when saved token is still valid.
+- Open Account tab.
 - Tap Logout.
 - Login page appears again.
+- Restart app.
+- App should not auto enter Main after logout.
