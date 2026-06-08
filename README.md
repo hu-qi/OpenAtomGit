@@ -21,6 +21,14 @@ OpenAtomGit 是一个从 0 构建的 HarmonyOS AtomGit 客户端实践项目。
 - RelationalStore
 - WebView
 
+## 工程结构
+
+```text
+app/        HarmonyOS ArkTS 客户端工程
+docs/       API 笔记与文章草稿
+harness/    AI Coding 项目大脑，记录架构、需求、决策、测试和回归规则
+```
+
 ## MVP 功能
 
 - Token 登录
@@ -32,6 +40,15 @@ OpenAtomGit 是一个从 0 构建的 HarmonyOS AtomGit 客户端实践项目。
 - 代码浏览
 - Issue 列表与详情
 - 本地浏览历史
+
+## AI Coding Harness
+
+本项目使用 `harness/` 约束 AI 辅助开发流程：
+
+- 开发前阅读 `harness/architecture/` 与 `harness/requirements/`
+- 重大方向变更记录到 `harness/decisions/`
+- 开发后更新 `harness/iteration/CHANGELOG-AI.md`
+- 提交前执行 `harness/regression/checklist.md`
 
 ## 文章系列
 
