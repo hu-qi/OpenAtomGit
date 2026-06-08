@@ -34,6 +34,8 @@
 - Tap one issue row if present.
 - Issue Detail section appears.
 - Issue title, state, comment count and body appear.
+- Comments section appears.
+- Issue comments appear or No comments found appears.
 - Page can scroll to bottom.
 - Tap Back.
 - Search page appears again.
