@@ -76,6 +76,7 @@
 - Added synchronous handlers for repository detail callbacks.
 - Removed optional chaining from issue mappers.
 - Split nested issue user DTO definitions.
+- Added RepositoryReadmeDto and used it for README parsing.
 
 ## Rule
 
