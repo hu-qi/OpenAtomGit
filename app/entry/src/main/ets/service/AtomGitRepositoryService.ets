@@ -8,6 +8,7 @@ import { RepositoryMapper } from '../mapper/RepositoryMapper';
 import { RepositoryFileModel } from '../model/RepositoryFileModel';
 import { RepositoryModel } from '../model/RepositoryModel';
 import { AtomGitHttpClient } from './AtomGitHttpClient';
+import { JsonParseHelper } from './JsonParseHelper';
 import { RepositoryPathHelper } from './RepositoryPathHelper';
 import { RepositoryRequestGuard } from './RepositoryRequestGuard';
 
@@ -20,16 +21,12 @@ export class AtomGitRepositoryService {
 
     const path = RepositoryPathHelper.repositoryPath(repository.owner, repository.name);
     const body = await AtomGitHttpClient.get(path, token);
-    if (body.length === 0) {
+    const dto = JsonParseHelper.parseObject<RepositoryDto>(body);
+    if (dto === null) {
       return null;
     }
 
-    try {
-      const dto = JSON.parse(body) as RepositoryDto;
-      return RepositoryMapper.fromDto(dto);
-    } catch (error) {
-      return null;
-    }
+    return RepositoryMapper.fromDto(dto);
   }
 
   static async getReadme(repository: RepositoryModel): Promise<string> {
@@ -44,12 +41,12 @@ export class AtomGitRepositoryService {
       return '';
     }
 
-    try {
-      const parsed = JSON.parse(body) as RepositoryReadmeDto;
-      return parsed.content || parsed.html || parsed.text || body;
-    } catch (error) {
+    const parsed = JsonParseHelper.parseObject<RepositoryReadmeDto>(body);
+    if (parsed === null) {
       return body;
     }
+
+    return parsed.content || parsed.html || parsed.text || body;
   }
 
   static async getRootFiles(repository: RepositoryModel): Promise<RepositoryFileModel[]> {
@@ -64,16 +61,8 @@ export class AtomGitRepositoryService {
 
     const path = RepositoryPathHelper.contentsPath(repository.owner, repository.name, targetPath);
     const body = await AtomGitHttpClient.get(path, token);
-    if (body.length === 0) {
-      return [];
-    }
-
-    try {
-      const list = JSON.parse(body) as RepositoryFileDto[];
-      return RepositoryFileMapper.fromDtoList(list);
-    } catch (error) {
-      return [];
-    }
+    const list = JsonParseHelper.parseArray<RepositoryFileDto>(body);
+    return RepositoryFileMapper.fromDtoList(list);
   }
 
   static async getFileContent(repository: RepositoryModel, filePath: string): Promise<string> {
@@ -88,11 +77,11 @@ export class AtomGitRepositoryService {
       return '';
     }
 
-    try {
-      const parsed = JSON.parse(body) as RepositoryFileContentDto;
-      return parsed.content || body;
-    } catch (error) {
+    const parsed = JsonParseHelper.parseObject<RepositoryFileContentDto>(body);
+    if (parsed === null) {
       return body;
     }
+
+    return parsed.content || body;
   }
 }
