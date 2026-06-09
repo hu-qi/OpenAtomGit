@@ -8,11 +8,12 @@ import { IssueModel } from '../model/IssueModel';
 import { RepositoryModel } from '../model/RepositoryModel';
 import { AtomGitHttpClient } from './AtomGitHttpClient';
 import { RepositoryPathHelper } from './RepositoryPathHelper';
+import { RepositoryRequestGuard } from './RepositoryRequestGuard';
 
 export class AtomGitIssueService {
   static async getOpenIssues(repository: RepositoryModel): Promise<IssueModel[]> {
     const token = TokenManager.getToken();
-    if (token.length === 0 || repository.owner.length === 0 || repository.name.length === 0) {
+    if (!RepositoryRequestGuard.canRequestRepository(token, repository)) {
       return [];
     }
 
@@ -37,7 +38,7 @@ export class AtomGitIssueService {
 
   static async getIssueDetail(repository: RepositoryModel, issueNumber: number): Promise<IssueModel | null> {
     const token = TokenManager.getToken();
-    if (token.length === 0 || repository.owner.length === 0 || repository.name.length === 0 || issueNumber <= 0) {
+    if (!RepositoryRequestGuard.canRequestIssue(token, repository, issueNumber)) {
       return null;
     }
 
@@ -57,7 +58,7 @@ export class AtomGitIssueService {
 
   static async getIssueComments(repository: RepositoryModel, issueNumber: number): Promise<IssueCommentModel[]> {
     const token = TokenManager.getToken();
-    if (token.length === 0 || repository.owner.length === 0 || repository.name.length === 0 || issueNumber <= 0) {
+    if (!RepositoryRequestGuard.canRequestIssue(token, repository, issueNumber)) {
       return [];
     }
 
