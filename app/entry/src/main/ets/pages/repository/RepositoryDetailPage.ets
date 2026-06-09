@@ -129,6 +129,22 @@ export struct RepositoryDetailPage {
     this.setIssueCommentsMessage('');
   }
 
+  truncateContent(content: string, maxLength: number): string {
+    if (content.length <= maxLength) {
+      return content;
+    }
+
+    return content.substring(0, maxLength) + '\n...';
+  }
+
+  truncateReadmeContent(content: string): string {
+    return this.truncateContent(content, 1200);
+  }
+
+  truncateFileContent(content: string): string {
+    return this.truncateContent(content, 1600);
+  }
+
   async loadRepositoryDetail(): Promise<void> {
     if (this.repository === null) {
       this.setRepositoryMessage('No repository selected');
@@ -167,7 +183,7 @@ export struct RepositoryDetailPage {
       return;
     }
 
-    this.readmeContent = content.length > 1200 ? content.substring(0, 1200) + '\n...' : content;
+    this.readmeContent = this.truncateReadmeContent(content);
     this.setReadmeMessage('');
   }
 
@@ -262,7 +278,7 @@ export struct RepositoryDetailPage {
       return;
     }
 
-    this.fileContent = content.length > 1600 ? content.substring(0, 1600) + '\n...' : content;
+    this.fileContent = this.truncateFileContent(content);
   }
 
   async goParentPath(): Promise<void> {
