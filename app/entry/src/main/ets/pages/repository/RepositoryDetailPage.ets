@@ -7,6 +7,7 @@ import { AtomGitIssueService } from '../../service/AtomGitIssueService';
 import { AtomGitRepositoryService } from '../../service/AtomGitRepositoryService';
 import { RepositoryStore } from '../../store/RepositoryStore';
 import { RepositoryBackAction } from './RepositoryBackAction';
+import { RepositoryContentPreviewHelper } from './RepositoryContentPreviewHelper';
 import { RepositoryDetailConstants } from './RepositoryDetailConstants';
 import { RepositoryFilesSection } from './RepositoryFilesSection';
 import { RepositoryIssueReplyNotice } from './RepositoryIssueReplyNotice';
@@ -136,22 +137,6 @@ export struct RepositoryDetailPage {
     this.setIssueCommentsMessage('');
   }
 
-  truncateContent(content: string, maxLength: number): string {
-    if (content.length <= maxLength) {
-      return content;
-    }
-
-    return content.substring(0, maxLength) + '\n...';
-  }
-
-  truncateReadmeContent(content: string): string {
-    return this.truncateContent(content, RepositoryDetailConstants.README_PREVIEW_MAX_LENGTH);
-  }
-
-  truncateFileContent(content: string): string {
-    return this.truncateContent(content, RepositoryDetailConstants.FILE_PREVIEW_MAX_LENGTH);
-  }
-
   @Builder
   buildSummarySection() {
     RepositorySummarySection({
@@ -254,7 +239,7 @@ export struct RepositoryDetailPage {
       return;
     }
 
-    this.readmeContent = this.truncateReadmeContent(content);
+    this.readmeContent = RepositoryContentPreviewHelper.truncateReadmeContent(content);
     this.setReadmeMessage('');
   }
 
@@ -349,7 +334,7 @@ export struct RepositoryDetailPage {
       return;
     }
 
-    this.fileContent = this.truncateFileContent(content);
+    this.fileContent = RepositoryContentPreviewHelper.truncateFileContent(content);
   }
 
   async goParentPath(): Promise<void> {
