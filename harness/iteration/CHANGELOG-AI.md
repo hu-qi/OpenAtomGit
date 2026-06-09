@@ -88,6 +88,7 @@
 - Added loading state setters in RepositoryDetailPage.
 - Added message state setters in RepositoryDetailPage.
 - Added reset helpers in RepositoryDetailPage.
+- Added content truncation helpers in RepositoryDetailPage.
 
 ## Rule
 
