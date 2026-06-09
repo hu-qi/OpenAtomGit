@@ -114,6 +114,21 @@ export struct RepositoryDetailPage {
     this.issueCommentsMessage = message;
   }
 
+  resetReadmeContent(): void {
+    this.readmeContent = '';
+  }
+
+  resetFilePreview(): void {
+    this.selectedFilePath = '';
+    this.fileContent = '';
+    this.setFileContentMessage('');
+  }
+
+  resetIssueComments(): void {
+    this.issueComments = [];
+    this.setIssueCommentsMessage('');
+  }
+
   async loadRepositoryDetail(): Promise<void> {
     if (this.repository === null) {
       this.setRepositoryMessage('No repository selected');
@@ -148,7 +163,7 @@ export struct RepositoryDetailPage {
 
     if (content.length === 0) {
       this.setReadmeMessage('README not found');
-      this.readmeContent = '';
+      this.resetReadmeContent();
       return;
     }
 
@@ -180,8 +195,7 @@ export struct RepositoryDetailPage {
 
     this.selectedIssue = issue;
     this.setIssueDetailMessage('');
-    this.issueComments = [];
-    this.setIssueCommentsMessage('');
+    this.resetIssueComments();
     this.setIssueDetailLoading(true);
     const detail = await AtomGitIssueService.getIssueDetail(this.repository, issue.number);
     this.setIssueDetailLoading(false);
@@ -219,9 +233,7 @@ export struct RepositoryDetailPage {
 
     this.setFilesLoading(true);
     this.currentPath = targetPath;
-    this.selectedFilePath = '';
-    this.fileContent = '';
-    this.setFileContentMessage('');
+    this.resetFilePreview();
     const result = await AtomGitRepositoryService.getFiles(this.repository, targetPath);
     this.setFilesLoading(false);
     this.files = result;
