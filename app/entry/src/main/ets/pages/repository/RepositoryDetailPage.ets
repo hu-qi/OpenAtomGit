@@ -7,6 +7,7 @@ import { AtomGitIssueService } from '../../service/AtomGitIssueService';
 import { AtomGitRepositoryService } from '../../service/AtomGitRepositoryService';
 import { RepositoryStore } from '../../store/RepositoryStore';
 import { RepositoryBackAction } from './RepositoryBackAction';
+import { RepositoryDetailConstants } from './RepositoryDetailConstants';
 import { RepositoryFilesSection } from './RepositoryFilesSection';
 import { RepositoryIssueReplyNotice } from './RepositoryIssueReplyNotice';
 import { RepositoryIssuesSection } from './RepositoryIssuesSection';
@@ -144,11 +145,11 @@ export struct RepositoryDetailPage {
   }
 
   truncateReadmeContent(content: string): string {
-    return this.truncateContent(content, 1200);
+    return this.truncateContent(content, RepositoryDetailConstants.README_PREVIEW_MAX_LENGTH);
   }
 
   truncateFileContent(content: string): string {
-    return this.truncateContent(content, 1600);
+    return this.truncateContent(content, RepositoryDetailConstants.FILE_PREVIEW_MAX_LENGTH);
   }
 
   @Builder
@@ -217,7 +218,7 @@ export struct RepositoryDetailPage {
 
   async loadRepositoryDetail(): Promise<void> {
     if (this.repository === null) {
-      this.setRepositoryMessage('No repository selected');
+      this.setRepositoryMessage(RepositoryDetailConstants.NO_REPOSITORY_SELECTED);
       return;
     }
 
@@ -226,7 +227,7 @@ export struct RepositoryDetailPage {
     this.setRepositoryLoading(false);
 
     if (detail === null) {
-      this.setRepositoryMessage('Repository detail load failed');
+      this.setRepositoryMessage(RepositoryDetailConstants.REPOSITORY_DETAIL_LOAD_FAILED);
     } else {
       this.repository = detail;
       RepositoryStore.setSelectedRepository(detail);
@@ -248,7 +249,7 @@ export struct RepositoryDetailPage {
     this.setReadmeLoading(false);
 
     if (content.length === 0) {
-      this.setReadmeMessage('README not found');
+      this.setReadmeMessage(RepositoryDetailConstants.README_NOT_FOUND);
       this.resetReadmeContent();
       return;
     }
@@ -268,7 +269,7 @@ export struct RepositoryDetailPage {
     this.issues = result;
 
     if (result.length === 0) {
-      this.setIssuesMessage('No open issues found');
+      this.setIssuesMessage(RepositoryDetailConstants.NO_OPEN_ISSUES_FOUND);
     } else {
       this.setIssuesMessage('');
     }
@@ -287,7 +288,7 @@ export struct RepositoryDetailPage {
     this.setIssueDetailLoading(false);
 
     if (detail === null) {
-      this.setIssueDetailMessage('Issue detail load failed');
+      this.setIssueDetailMessage(RepositoryDetailConstants.ISSUE_DETAIL_LOAD_FAILED);
       return;
     }
 
@@ -306,7 +307,7 @@ export struct RepositoryDetailPage {
     this.issueComments = result;
 
     if (result.length === 0) {
-      this.setIssueCommentsMessage('No comments found');
+      this.setIssueCommentsMessage(RepositoryDetailConstants.NO_COMMENTS_FOUND);
     } else {
       this.setIssueCommentsMessage('');
     }
@@ -325,7 +326,7 @@ export struct RepositoryDetailPage {
     this.files = result;
 
     if (result.length === 0) {
-      this.setFilesMessage('No files found');
+      this.setFilesMessage(RepositoryDetailConstants.NO_FILES_FOUND);
     } else {
       this.setFilesMessage('');
     }
@@ -344,7 +345,7 @@ export struct RepositoryDetailPage {
     this.setFileContentLoading(false);
 
     if (content.length === 0) {
-      this.setFileContentMessage('File content not available');
+      this.setFileContentMessage(RepositoryDetailConstants.FILE_CONTENT_NOT_AVAILABLE);
       return;
     }
 
