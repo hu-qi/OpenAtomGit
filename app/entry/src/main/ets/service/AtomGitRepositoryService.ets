@@ -3,14 +3,13 @@ import { RepositoryDto } from '../dto/RepositoryDto';
 import { RepositoryFileContentDto } from '../dto/RepositoryFileContentDto';
 import { RepositoryFileDto } from '../dto/RepositoryFileDto';
 import { RepositoryReadmeDto } from '../dto/RepositoryReadmeDto';
-import { RepositoryFileMapper } from '../mapper/RepositoryFileMapper';
-import { RepositoryMapper } from '../mapper/RepositoryMapper';
 import { RepositoryFileModel } from '../model/RepositoryFileModel';
 import { RepositoryModel } from '../model/RepositoryModel';
 import { AtomGitHttpClient } from './AtomGitHttpClient';
 import { JsonParseHelper } from './JsonParseHelper';
 import { RepositoryPathHelper } from './RepositoryPathHelper';
 import { RepositoryRequestGuard } from './RepositoryRequestGuard';
+import { RepositoryResponseMapper } from './RepositoryResponseMapper';
 
 export class AtomGitRepositoryService {
   static async getRepositoryDetail(repository: RepositoryModel): Promise<RepositoryModel | null> {
@@ -22,11 +21,7 @@ export class AtomGitRepositoryService {
     const path = RepositoryPathHelper.repositoryPath(repository.owner, repository.name);
     const body = await AtomGitHttpClient.get(path, token);
     const dto = JsonParseHelper.parseObject<RepositoryDto>(body);
-    if (dto === null) {
-      return null;
-    }
-
-    return RepositoryMapper.fromDto(dto);
+    return RepositoryResponseMapper.repositoryFromDto(dto);
   }
 
   static async getReadme(repository: RepositoryModel): Promise<string> {
@@ -42,11 +37,7 @@ export class AtomGitRepositoryService {
     }
 
     const parsed = JsonParseHelper.parseObject<RepositoryReadmeDto>(body);
-    if (parsed === null) {
-      return body;
-    }
-
-    return parsed.content || parsed.html || parsed.text || body;
+    return RepositoryResponseMapper.readmeContentFromDto(parsed, body);
   }
 
   static async getRootFiles(repository: RepositoryModel): Promise<RepositoryFileModel[]> {
@@ -62,7 +53,7 @@ export class AtomGitRepositoryService {
     const path = RepositoryPathHelper.contentsPath(repository.owner, repository.name, targetPath);
     const body = await AtomGitHttpClient.get(path, token);
     const list = JsonParseHelper.parseArray<RepositoryFileDto>(body);
-    return RepositoryFileMapper.fromDtoList(list);
+    return RepositoryResponseMapper.filesFromDtoList(list);
   }
 
   static async getFileContent(repository: RepositoryModel, filePath: string): Promise<string> {
@@ -78,10 +69,6 @@ export class AtomGitRepositoryService {
     }
 
     const parsed = JsonParseHelper.parseObject<RepositoryFileContentDto>(body);
-    if (parsed === null) {
-      return body;
-    }
-
-    return parsed.content || body;
+    return RepositoryResponseMapper.fileContentFromDto(parsed, body);
   }
 }
