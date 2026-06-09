@@ -145,6 +145,70 @@ export struct RepositoryDetailPage {
     return this.truncateContent(content, 1600);
   }
 
+  @Builder
+  buildSummarySection() {
+    RepositorySummarySection({
+      fullName: this.repository === null ? '' : this.repository.getFullName(),
+      description: this.repository === null ? '' : this.repository.description,
+      stars: this.repository === null ? 0 : this.repository.stars,
+      forks: this.repository === null ? 0 : this.repository.forks,
+      watchers: this.repository === null ? 0 : this.repository.watchers,
+      defaultBranch: this.repository === null ? '' : this.repository.defaultBranch,
+      isLoading: this.isLoading,
+      errorMessage: this.errorMessage
+    })
+  }
+
+  @Builder
+  buildFilesSection() {
+    RepositoryFilesSection({
+      currentPath: this.currentPath,
+      files: this.files,
+      isFilesLoading: this.isFilesLoading,
+      filesMessage: this.filesMessage,
+      selectedFilePath: this.selectedFilePath,
+      isFileContentLoading: this.isFileContentLoading,
+      fileContentMessage: this.fileContentMessage,
+      fileContent: this.fileContent,
+      onOpenDirectory: (path: string) => {
+        this.handleOpenDirectory(path);
+      },
+      onOpenFile: (path: string) => {
+        this.handleOpenFile(path);
+      },
+      onUp: () => {
+        this.handleGoParentPath();
+      }
+    })
+  }
+
+  @Builder
+  buildReadmeSection() {
+    RepositoryReadmeSection({
+      isReadmeLoading: this.isReadmeLoading,
+      readmeMessage: this.readmeMessage,
+      readmeContent: this.readmeContent
+    })
+  }
+
+  @Builder
+  buildIssuesSection() {
+    RepositoryIssuesSection({
+      issues: this.issues,
+      selectedIssue: this.selectedIssue,
+      issueComments: this.issueComments,
+      isIssuesLoading: this.isIssuesLoading,
+      isIssueDetailLoading: this.isIssueDetailLoading,
+      isIssueCommentsLoading: this.isIssueCommentsLoading,
+      issuesMessage: this.issuesMessage,
+      issueDetailMessage: this.issueDetailMessage,
+      issueCommentsMessage: this.issueCommentsMessage,
+      onOpenIssue: (issue: IssueModel) => {
+        this.handleOpenIssue(issue);
+      }
+    })
+  }
+
   async loadRepositoryDetail(): Promise<void> {
     if (this.repository === null) {
       this.setRepositoryMessage('No repository selected');
@@ -300,57 +364,10 @@ export struct RepositoryDetailPage {
             this.onNavigate(AppRoute.SEARCH)
           })
 
-        RepositorySummarySection({
-          fullName: this.repository === null ? '' : this.repository.getFullName(),
-          description: this.repository === null ? '' : this.repository.description,
-          stars: this.repository === null ? 0 : this.repository.stars,
-          forks: this.repository === null ? 0 : this.repository.forks,
-          watchers: this.repository === null ? 0 : this.repository.watchers,
-          defaultBranch: this.repository === null ? '' : this.repository.defaultBranch,
-          isLoading: this.isLoading,
-          errorMessage: this.errorMessage
-        })
-
-        RepositoryFilesSection({
-          currentPath: this.currentPath,
-          files: this.files,
-          isFilesLoading: this.isFilesLoading,
-          filesMessage: this.filesMessage,
-          selectedFilePath: this.selectedFilePath,
-          isFileContentLoading: this.isFileContentLoading,
-          fileContentMessage: this.fileContentMessage,
-          fileContent: this.fileContent,
-          onOpenDirectory: (path: string) => {
-            this.handleOpenDirectory(path);
-          },
-          onOpenFile: (path: string) => {
-            this.handleOpenFile(path);
-          },
-          onUp: () => {
-            this.handleGoParentPath();
-          }
-        })
-
-        RepositoryReadmeSection({
-          isReadmeLoading: this.isReadmeLoading,
-          readmeMessage: this.readmeMessage,
-          readmeContent: this.readmeContent
-        })
-
-        RepositoryIssuesSection({
-          issues: this.issues,
-          selectedIssue: this.selectedIssue,
-          issueComments: this.issueComments,
-          isIssuesLoading: this.isIssuesLoading,
-          isIssueDetailLoading: this.isIssueDetailLoading,
-          isIssueCommentsLoading: this.isIssueCommentsLoading,
-          issuesMessage: this.issuesMessage,
-          issueDetailMessage: this.issueDetailMessage,
-          issueCommentsMessage: this.issueCommentsMessage,
-          onOpenIssue: (issue: IssueModel) => {
-            this.handleOpenIssue(issue);
-          }
-        })
+        this.buildSummarySection()
+        this.buildFilesSection()
+        this.buildReadmeSection()
+        this.buildIssuesSection()
 
         Text('Issue comments reply 将在后续版本接入。')
           .fontSize(14)
