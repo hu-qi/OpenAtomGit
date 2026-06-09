@@ -1,12 +1,11 @@
 import { TokenManager } from '../auth/TokenManager';
 import { IssueCommentDto } from '../dto/IssueCommentDto';
 import { IssueDto } from '../dto/IssueDto';
-import { IssueCommentMapper } from '../mapper/IssueCommentMapper';
-import { IssueMapper } from '../mapper/IssueMapper';
 import { IssueCommentModel } from '../model/IssueCommentModel';
 import { IssueModel } from '../model/IssueModel';
 import { RepositoryModel } from '../model/RepositoryModel';
 import { AtomGitHttpClient } from './AtomGitHttpClient';
+import { IssueResponseMapper } from './IssueResponseMapper';
 import { JsonParseHelper } from './JsonParseHelper';
 import { RepositoryPathHelper } from './RepositoryPathHelper';
 import { RepositoryRequestGuard } from './RepositoryRequestGuard';
@@ -26,7 +25,7 @@ export class AtomGitIssueService {
     });
 
     const list = JsonParseHelper.parseArray<IssueDto>(body);
-    return IssueMapper.fromDtoList(list);
+    return IssueResponseMapper.issuesFromDtoList(list);
   }
 
   static async getIssueDetail(repository: RepositoryModel, issueNumber: number): Promise<IssueModel | null> {
@@ -38,11 +37,7 @@ export class AtomGitIssueService {
     const path = RepositoryPathHelper.issueDetailPath(repository.owner, repository.name, issueNumber);
     const body = await AtomGitHttpClient.get(path, token);
     const dto = JsonParseHelper.parseObject<IssueDto>(body);
-    if (dto === null) {
-      return null;
-    }
-
-    return IssueMapper.fromDto(dto);
+    return IssueResponseMapper.issueFromDto(dto);
   }
 
   static async getIssueComments(repository: RepositoryModel, issueNumber: number): Promise<IssueCommentModel[]> {
@@ -58,6 +53,6 @@ export class AtomGitIssueService {
     });
 
     const list = JsonParseHelper.parseArray<IssueCommentDto>(body);
-    return IssueCommentMapper.fromDtoList(list);
+    return IssueResponseMapper.commentsFromDtoList(list);
   }
 }
