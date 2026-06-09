@@ -86,9 +86,37 @@ export struct RepositoryDetailPage {
     this.isIssueCommentsLoading = isLoading;
   }
 
+  setRepositoryMessage(message: string): void {
+    this.errorMessage = message;
+  }
+
+  setReadmeMessage(message: string): void {
+    this.readmeMessage = message;
+  }
+
+  setFilesMessage(message: string): void {
+    this.filesMessage = message;
+  }
+
+  setFileContentMessage(message: string): void {
+    this.fileContentMessage = message;
+  }
+
+  setIssuesMessage(message: string): void {
+    this.issuesMessage = message;
+  }
+
+  setIssueDetailMessage(message: string): void {
+    this.issueDetailMessage = message;
+  }
+
+  setIssueCommentsMessage(message: string): void {
+    this.issueCommentsMessage = message;
+  }
+
   async loadRepositoryDetail(): Promise<void> {
     if (this.repository === null) {
-      this.errorMessage = 'No repository selected';
+      this.setRepositoryMessage('No repository selected');
       return;
     }
 
@@ -97,11 +125,11 @@ export struct RepositoryDetailPage {
     this.setRepositoryLoading(false);
 
     if (detail === null) {
-      this.errorMessage = 'Repository detail load failed';
+      this.setRepositoryMessage('Repository detail load failed');
     } else {
       this.repository = detail;
       RepositoryStore.setSelectedRepository(detail);
-      this.errorMessage = '';
+      this.setRepositoryMessage('');
     }
 
     await this.loadFiles('');
@@ -119,13 +147,13 @@ export struct RepositoryDetailPage {
     this.setReadmeLoading(false);
 
     if (content.length === 0) {
-      this.readmeMessage = 'README not found';
+      this.setReadmeMessage('README not found');
       this.readmeContent = '';
       return;
     }
 
     this.readmeContent = content.length > 1200 ? content.substring(0, 1200) + '\n...' : content;
-    this.readmeMessage = '';
+    this.setReadmeMessage('');
   }
 
   async loadIssues(): Promise<void> {
@@ -139,9 +167,9 @@ export struct RepositoryDetailPage {
     this.issues = result;
 
     if (result.length === 0) {
-      this.issuesMessage = 'No open issues found';
+      this.setIssuesMessage('No open issues found');
     } else {
-      this.issuesMessage = '';
+      this.setIssuesMessage('');
     }
   }
 
@@ -151,15 +179,15 @@ export struct RepositoryDetailPage {
     }
 
     this.selectedIssue = issue;
-    this.issueDetailMessage = '';
+    this.setIssueDetailMessage('');
     this.issueComments = [];
-    this.issueCommentsMessage = '';
+    this.setIssueCommentsMessage('');
     this.setIssueDetailLoading(true);
     const detail = await AtomGitIssueService.getIssueDetail(this.repository, issue.number);
     this.setIssueDetailLoading(false);
 
     if (detail === null) {
-      this.issueDetailMessage = 'Issue detail load failed';
+      this.setIssueDetailMessage('Issue detail load failed');
       return;
     }
 
@@ -178,9 +206,9 @@ export struct RepositoryDetailPage {
     this.issueComments = result;
 
     if (result.length === 0) {
-      this.issueCommentsMessage = 'No comments found';
+      this.setIssueCommentsMessage('No comments found');
     } else {
-      this.issueCommentsMessage = '';
+      this.setIssueCommentsMessage('');
     }
   }
 
@@ -193,15 +221,15 @@ export struct RepositoryDetailPage {
     this.currentPath = targetPath;
     this.selectedFilePath = '';
     this.fileContent = '';
-    this.fileContentMessage = '';
+    this.setFileContentMessage('');
     const result = await AtomGitRepositoryService.getFiles(this.repository, targetPath);
     this.setFilesLoading(false);
     this.files = result;
 
     if (result.length === 0) {
-      this.filesMessage = 'No files found';
+      this.setFilesMessage('No files found');
     } else {
-      this.filesMessage = '';
+      this.setFilesMessage('');
     }
   }
 
@@ -212,13 +240,13 @@ export struct RepositoryDetailPage {
 
     this.selectedFilePath = filePath;
     this.fileContent = '';
-    this.fileContentMessage = '';
+    this.setFileContentMessage('');
     this.setFileContentLoading(true);
     const content = await AtomGitRepositoryService.getFileContent(this.repository, filePath);
     this.setFileContentLoading(false);
 
     if (content.length === 0) {
-      this.fileContentMessage = 'File content not available';
+      this.setFileContentMessage('File content not available');
       return;
     }
 
