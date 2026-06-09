@@ -58,15 +58,43 @@ export struct RepositoryDetailPage {
     this.loadIssueDetail(issue);
   }
 
+  setRepositoryLoading(isLoading: boolean): void {
+    this.isLoading = isLoading;
+  }
+
+  setReadmeLoading(isLoading: boolean): void {
+    this.isReadmeLoading = isLoading;
+  }
+
+  setFilesLoading(isLoading: boolean): void {
+    this.isFilesLoading = isLoading;
+  }
+
+  setFileContentLoading(isLoading: boolean): void {
+    this.isFileContentLoading = isLoading;
+  }
+
+  setIssuesLoading(isLoading: boolean): void {
+    this.isIssuesLoading = isLoading;
+  }
+
+  setIssueDetailLoading(isLoading: boolean): void {
+    this.isIssueDetailLoading = isLoading;
+  }
+
+  setIssueCommentsLoading(isLoading: boolean): void {
+    this.isIssueCommentsLoading = isLoading;
+  }
+
   async loadRepositoryDetail(): Promise<void> {
     if (this.repository === null) {
       this.errorMessage = 'No repository selected';
       return;
     }
 
-    this.isLoading = true;
+    this.setRepositoryLoading(true);
     const detail = await AtomGitRepositoryService.getRepositoryDetail(this.repository);
-    this.isLoading = false;
+    this.setRepositoryLoading(false);
 
     if (detail === null) {
       this.errorMessage = 'Repository detail load failed';
@@ -86,9 +114,9 @@ export struct RepositoryDetailPage {
       return;
     }
 
-    this.isReadmeLoading = true;
+    this.setReadmeLoading(true);
     const content = await AtomGitRepositoryService.getReadme(this.repository);
-    this.isReadmeLoading = false;
+    this.setReadmeLoading(false);
 
     if (content.length === 0) {
       this.readmeMessage = 'README not found';
@@ -105,9 +133,9 @@ export struct RepositoryDetailPage {
       return;
     }
 
-    this.isIssuesLoading = true;
+    this.setIssuesLoading(true);
     const result = await AtomGitIssueService.getOpenIssues(this.repository);
-    this.isIssuesLoading = false;
+    this.setIssuesLoading(false);
     this.issues = result;
 
     if (result.length === 0) {
@@ -126,9 +154,9 @@ export struct RepositoryDetailPage {
     this.issueDetailMessage = '';
     this.issueComments = [];
     this.issueCommentsMessage = '';
-    this.isIssueDetailLoading = true;
+    this.setIssueDetailLoading(true);
     const detail = await AtomGitIssueService.getIssueDetail(this.repository, issue.number);
-    this.isIssueDetailLoading = false;
+    this.setIssueDetailLoading(false);
 
     if (detail === null) {
       this.issueDetailMessage = 'Issue detail load failed';
@@ -144,9 +172,9 @@ export struct RepositoryDetailPage {
       return;
     }
 
-    this.isIssueCommentsLoading = true;
+    this.setIssueCommentsLoading(true);
     const result = await AtomGitIssueService.getIssueComments(this.repository, issueNumber);
-    this.isIssueCommentsLoading = false;
+    this.setIssueCommentsLoading(false);
     this.issueComments = result;
 
     if (result.length === 0) {
@@ -161,13 +189,13 @@ export struct RepositoryDetailPage {
       return;
     }
 
-    this.isFilesLoading = true;
+    this.setFilesLoading(true);
     this.currentPath = targetPath;
     this.selectedFilePath = '';
     this.fileContent = '';
     this.fileContentMessage = '';
     const result = await AtomGitRepositoryService.getFiles(this.repository, targetPath);
-    this.isFilesLoading = false;
+    this.setFilesLoading(false);
     this.files = result;
 
     if (result.length === 0) {
@@ -185,9 +213,9 @@ export struct RepositoryDetailPage {
     this.selectedFilePath = filePath;
     this.fileContent = '';
     this.fileContentMessage = '';
-    this.isFileContentLoading = true;
+    this.setFileContentLoading(true);
     const content = await AtomGitRepositoryService.getFileContent(this.repository, filePath);
-    this.isFileContentLoading = false;
+    this.setFileContentLoading(false);
 
     if (content.length === 0) {
       this.fileContentMessage = 'File content not available';
