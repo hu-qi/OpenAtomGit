@@ -92,6 +92,7 @@
 - Extracted RepositoryDetailPage section builders.
 - Added RepositoryIssueReplyNotice component and reused it in RepositoryDetailPage.
 - Added RepositoryBackAction component and reused it in RepositoryDetailPage.
+- Added RepositoryDetailConstants and reused it in RepositoryDetailPage.
 
 ## Rule
 
