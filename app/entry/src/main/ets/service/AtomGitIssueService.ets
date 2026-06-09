@@ -7,6 +7,7 @@ import { IssueCommentModel } from '../model/IssueCommentModel';
 import { IssueModel } from '../model/IssueModel';
 import { RepositoryModel } from '../model/RepositoryModel';
 import { AtomGitHttpClient } from './AtomGitHttpClient';
+import { JsonParseHelper } from './JsonParseHelper';
 import { RepositoryPathHelper } from './RepositoryPathHelper';
 import { RepositoryRequestGuard } from './RepositoryRequestGuard';
 
@@ -24,16 +25,8 @@ export class AtomGitIssueService {
       per_page: '20'
     });
 
-    if (body.length === 0) {
-      return [];
-    }
-
-    try {
-      const list = JSON.parse(body) as IssueDto[];
-      return IssueMapper.fromDtoList(list);
-    } catch (error) {
-      return [];
-    }
+    const list = JsonParseHelper.parseArray<IssueDto>(body);
+    return IssueMapper.fromDtoList(list);
   }
 
   static async getIssueDetail(repository: RepositoryModel, issueNumber: number): Promise<IssueModel | null> {
@@ -44,16 +37,12 @@ export class AtomGitIssueService {
 
     const path = RepositoryPathHelper.issueDetailPath(repository.owner, repository.name, issueNumber);
     const body = await AtomGitHttpClient.get(path, token);
-    if (body.length === 0) {
+    const dto = JsonParseHelper.parseObject<IssueDto>(body);
+    if (dto === null) {
       return null;
     }
 
-    try {
-      const dto = JSON.parse(body) as IssueDto;
-      return IssueMapper.fromDto(dto);
-    } catch (error) {
-      return null;
-    }
+    return IssueMapper.fromDto(dto);
   }
 
   static async getIssueComments(repository: RepositoryModel, issueNumber: number): Promise<IssueCommentModel[]> {
@@ -68,15 +57,7 @@ export class AtomGitIssueService {
       per_page: '20'
     });
 
-    if (body.length === 0) {
-      return [];
-    }
-
-    try {
-      const list = JSON.parse(body) as IssueCommentDto[];
-      return IssueCommentMapper.fromDtoList(list);
-    } catch (error) {
-      return [];
-    }
+    const list = JsonParseHelper.parseArray<IssueCommentDto>(body);
+    return IssueCommentMapper.fromDtoList(list);
   }
 }
