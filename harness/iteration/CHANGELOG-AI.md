@@ -87,6 +87,7 @@
 - Added IssueResponseMapper and reused it in issue service.
 - Added loading state setters in RepositoryDetailPage.
 - Added message state setters in RepositoryDetailPage.
+- Added reset helpers in RepositoryDetailPage.
 
 ## Rule
 
