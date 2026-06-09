@@ -84,6 +84,7 @@
 - Added RepositoryRequestGuard and reused it in repository and issue services.
 - Added JsonParseHelper and reused it in repository and issue services.
 - Added RepositoryResponseMapper and reused it in repository service.
+- Added IssueResponseMapper and reused it in issue service.
 
 ## Rule
 
