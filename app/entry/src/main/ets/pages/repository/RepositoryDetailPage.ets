@@ -6,6 +6,7 @@ import { RepositoryModel } from '../../model/RepositoryModel';
 import { AtomGitIssueService } from '../../service/AtomGitIssueService';
 import { AtomGitRepositoryService } from '../../service/AtomGitRepositoryService';
 import { RepositoryStore } from '../../store/RepositoryStore';
+import { RepositoryBackAction } from './RepositoryBackAction';
 import { RepositoryFilesSection } from './RepositoryFilesSection';
 import { RepositoryIssueReplyNotice } from './RepositoryIssueReplyNotice';
 import { RepositoryIssuesSection } from './RepositoryIssuesSection';
@@ -57,6 +58,10 @@ export struct RepositoryDetailPage {
 
   handleOpenIssue(issue: IssueModel): void {
     this.loadIssueDetail(issue);
+  }
+
+  handleBack(): void {
+    this.onNavigate(AppRoute.SEARCH);
   }
 
   setRepositoryLoading(isLoading: boolean): void {
@@ -359,11 +364,11 @@ export struct RepositoryDetailPage {
   build() {
     Scroll() {
       Column() {
-        Text('Back')
-          .fontSize(18)
-          .onClick(() => {
-            this.onNavigate(AppRoute.SEARCH)
-          })
+        RepositoryBackAction({
+          onBack: () => {
+            this.handleBack();
+          }
+        })
 
         this.buildSummarySection()
         this.buildFilesSection()
