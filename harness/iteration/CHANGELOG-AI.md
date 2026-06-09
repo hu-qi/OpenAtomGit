@@ -91,6 +91,7 @@
 - Added content truncation helpers in RepositoryDetailPage.
 - Extracted RepositoryDetailPage section builders.
 - Added RepositoryIssueReplyNotice component and reused it in RepositoryDetailPage.
+- Added RepositoryBackAction component and reused it in RepositoryDetailPage.
 
 ## Rule
 
