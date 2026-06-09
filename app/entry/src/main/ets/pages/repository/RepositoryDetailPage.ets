@@ -7,6 +7,7 @@ import { AtomGitIssueService } from '../../service/AtomGitIssueService';
 import { AtomGitRepositoryService } from '../../service/AtomGitRepositoryService';
 import { RepositoryStore } from '../../store/RepositoryStore';
 import { RepositoryFilesSection } from './RepositoryFilesSection';
+import { RepositoryIssueReplyNotice } from './RepositoryIssueReplyNotice';
 import { RepositoryIssuesSection } from './RepositoryIssuesSection';
 import { RepositoryReadmeSection } from './RepositoryReadmeSection';
 import { RepositorySummarySection } from './RepositorySummarySection';
@@ -369,9 +370,7 @@ export struct RepositoryDetailPage {
         this.buildReadmeSection()
         this.buildIssuesSection()
 
-        Text('Issue comments reply 将在后续版本接入。')
-          .fontSize(14)
-          .margin({ top: 24, bottom: 24 })
+        RepositoryIssueReplyNotice()
       }
       .width('100%')
       .padding(20)
