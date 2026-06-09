@@ -9,11 +9,12 @@ import { RepositoryFileModel } from '../model/RepositoryFileModel';
 import { RepositoryModel } from '../model/RepositoryModel';
 import { AtomGitHttpClient } from './AtomGitHttpClient';
 import { RepositoryPathHelper } from './RepositoryPathHelper';
+import { RepositoryRequestGuard } from './RepositoryRequestGuard';
 
 export class AtomGitRepositoryService {
   static async getRepositoryDetail(repository: RepositoryModel): Promise<RepositoryModel | null> {
     const token = TokenManager.getToken();
-    if (token.length === 0 || repository.owner.length === 0 || repository.name.length === 0) {
+    if (!RepositoryRequestGuard.canRequestRepository(token, repository)) {
       return null;
     }
 
@@ -33,7 +34,7 @@ export class AtomGitRepositoryService {
 
   static async getReadme(repository: RepositoryModel): Promise<string> {
     const token = TokenManager.getToken();
-    if (token.length === 0 || repository.owner.length === 0 || repository.name.length === 0) {
+    if (!RepositoryRequestGuard.canRequestRepository(token, repository)) {
       return '';
     }
 
@@ -57,7 +58,7 @@ export class AtomGitRepositoryService {
 
   static async getFiles(repository: RepositoryModel, targetPath: string): Promise<RepositoryFileModel[]> {
     const token = TokenManager.getToken();
-    if (token.length === 0 || repository.owner.length === 0 || repository.name.length === 0) {
+    if (!RepositoryRequestGuard.canRequestRepository(token, repository)) {
       return [];
     }
 
@@ -77,7 +78,7 @@ export class AtomGitRepositoryService {
 
   static async getFileContent(repository: RepositoryModel, filePath: string): Promise<string> {
     const token = TokenManager.getToken();
-    if (token.length === 0 || repository.owner.length === 0 || repository.name.length === 0 || filePath.length === 0) {
+    if (!RepositoryRequestGuard.canRequestFile(token, repository, filePath)) {
       return '';
     }
 
